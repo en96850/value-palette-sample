@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Value Palette</title>
+  <style>
+    :root {
+      --bg: #f3eee6;
+      --panel: rgba(255, 250, 242, 0.94);
+      --panel-soft: #fbf4ea;
+      --line: #d9c8b2;
+      --text: #2c241c;
+      --muted: #7f6d5a;
+      --accent: #c97a2b;
+      --shadow: rgba(90, 60, 30, 0.12);
+      --dark: #2f2419;
+      --stack-height: 600px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 18px 22px 28px;
+      font-family: "Yu Gothic", "Hiragino Sans", "Noto Sans JP", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, #fff8ec 0, transparent 280px),
+        linear-gradient(135deg, #f7f1e8, var(--bg));
+    }
+
+    .page {
+      max-width: 1380px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      margin-bottom: 10px;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 38px;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .sub {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 280px 1fr 420px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .side-stack,
+    .control-stack {
+      height: var(--stack-height);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .wheel-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: 0 18px 44px var(--shadow);
+    }
+
+    .sample-panel {
+      padding: 14px;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hover-panel {
+      flex: 0 0 170px;
+    }
+
+    .picked-panel {
+      flex: 0 0 210px;
+    }
+
+    .palette-panel {
+      flex: 1;
+      min-height: 0;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sample-head,
+    .palette-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+
+    .sample-title,
+    .palette-title {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .sample-badge {
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: #efe1ce;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .sample-box {
+      flex: 1;
+      min-height: 62px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.45), rgba(240,225,205,0.55));
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.45);
+    }
+
+    .sample-info {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      font-family: "Consolas", "Menlo", monospace;
+      min-height: 40px;
+    }
+
+    .sample-main {
+      color: var(--text);
+      font-weight: 700;
+      word-break: break-all;
+    }
+
+    .add-palette-row {
+      margin-top: 8px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .small-button {
+      border: none;
+      border-radius: 999px;
+      background: var(--dark);
+      color: #fffaf2;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .small-button:hover {
+      background: var(--accent);
+    }
+
+    .reset-button {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fffaf2;
+      color: var(--muted);
+      padding: 5px 9px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .reset-button:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .palette-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .palette-desc {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 7px;
+      align-content: start;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .palette-swatch {
+      aspect-ratio: 1 / 1;
+      border-radius: 9px;
+      border: 1px solid rgba(44, 36, 28, 0.18);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35);
+    }
+
+    .palette-empty {
+      grid-column: 1 / -1;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .palette-count {
+      color: var(--muted);
+      font-size: 12px;
+      font-family: "Consolas", "Menlo", monospace;
+      white-space: nowrap;
+    }
+
+    .wheel-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      aspect-ratio: 1 / 1;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 28px;
+      background: rgba(255, 250, 242, 0.72);
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 50px var(--shadow);
+    }
+
+    .display-switch {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      z-index: 2;
+      display: flex;
+      gap: 5px;
+      padding: 5px;
+      border-radius: 999px;
+      background: rgba(251, 244, 234, 0.94);
+      border: 1px solid var(--line);
+      box-shadow: 0 8px 20px rgba(90, 60, 30, 0.12);
+    }
+
+    .display-button {
+      border: none;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      padding: 6px 12px 7px;
+      font-weight: 700;
+      cursor: pointer;
+      min-width: 72px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
+      line-height: 1.15;
+    }
+
+    .display-button .jp {
+      font-size: 12px;
+    }
+
+    .display-button .en {
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      opacity: 0.72;
+    }
+
+    .display-button.active {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 5px 14px rgba(201, 122, 43, 0.24);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-width: 540px;
+      background: transparent;
+      cursor: crosshair;
+    }
+
+    .center-readout {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .value-badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: var(--dark);
+      color: white;
+      box-shadow: 0 12px 28px rgba(44, 36, 28, 0.22);
+    }
+
+    .value-badge-label {
+      color: #d7c8b9;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      font-weight: 700;
+    }
+
+    .value-badge-num {
+      color: #ffd59f;
+      font-size: 28px;
+      font-family: "Consolas", "Menlo", monospace;
+      font-weight: 700;
+      min-width: 56px;
+      text-align: right;
+      line-height: 1;
+    }
+
+    .gray-preview-box {
+      width: 58px;
+      height: 58px;
+      border-radius: 14px;
+      border: 1px solid rgba(44, 36, 28, 0.18);
+      background: #9c9c9c;
+      box-shadow: 0 12px 28px rgba(44, 36, 28, 0.12);
+    }
+
+    .control-panel {
+      padding: 20px;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-title {
+      margin: 0 0 10px;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .panel-note {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .tab-buttons {
+      display: flex;
+      gap: 6px;
+      padding: 5px;
+      border-radius: 999px;
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      margin-bottom: 18px;
+    }
+
+    .tab-button {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 11px 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .tab-button.active {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 6px 16px rgba(201, 122, 43, 0.25);
+    }
+
+    .tab-panel {
+      display: none;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .tab-panel.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .input-preview-layout {
+      display: grid;
+      grid-template-columns: 118px 1fr;
+      gap: 22px;
+      align-items: start;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .field-column {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .field-line {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      gap: 8px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    input[type="number"],
+    input[type="text"] {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fffdf8;
+      color: var(--text);
+      font-size: 14px;
+      font-family: "Consolas", "Menlo", monospace;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(201, 122, 43, 0.16);
+    }
+
+    .preview {
+      width: 100%;
+      height: 150px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    .main-button,
+    #saveButton {
+      border: none;
+      border-radius: 999px;
+      background: var(--dark);
+      color: #fffaf2;
+      padding: 11px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .main-button:hover,
+    #saveButton:hover {
+      background: var(--accent);
+    }
+
+    .button-row {
+      margin-top: auto;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .slider-panel,
+    .number-panel {
+      padding: 14px 18px;
+    }
+
+    .slider-panel {
+      flex: 0 0 auto;
+    }
+
+    .slider-track-row,
+    .number-row,
+    .bottom-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .slider-label,
+    .number-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      min-width: 200px;
+      height: 12px;
+      appearance: none;
+      -webkit-appearance: none;
+      border-radius: 999px;
+      border: 1px solid #b8aa98;
+      background: linear-gradient(to right, #151515 0%, #777777 50%, #ffffff 100%);
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid #2c241c;
+      background: #fffaf2;
+      box-shadow: 0 2px 8px rgba(44, 36, 28, 0.35);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid #2c241c;
+      background: #fffaf2;
+      box-shadow: 0 2px 8px rgba(44, 36, 28, 0.35);
+    }
+
+    .bottom-actions {
+      flex: 0 0 auto;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .number-panel {
+      flex: 0 0 210px;
+      max-width: 210px;
+    }
+
+    .number-row {
+      justify-content: space-between;
+    }
+
+    .number-label {
+      line-height: 1.35;
+    }
+
+    #valueNumber {
+      width: 84px;
+    }
+
+    .save-area {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .save-options {
+      position: relative;
+      left: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      margin-right: 8px;
+    }
+
+    .save-options label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .save-options input {
+      accent-color: var(--accent);
+    }
+
+    #saveButton {
+      flex: 0 0 auto;
+    }
+
+    @media (max-width: 1180px) {
+      :root {
+        --stack-height: auto;
+      }
+
+      body {
+        padding: 16px;
+      }
+
+      .page {
+        max-width: 760px;
+      }
+
+      .workspace {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .side-stack,
+      .control-stack {
+        height: auto;
+      }
+
+      .wheel-stack {
+        order: 1;
+      }
+
+      .control-stack {
+        order: 2;
+      }
+
+      .side-stack {
+        order: 3;
+      }
+
+      .wheel-wrap,
+      .slider-panel,
+      .number-panel,
+      .control-panel {
+        width: 100%;
+        max-width: none;
+      }
+
+      .wheel-wrap {
+        max-width: 640px;
+        margin: 0 auto;
+      }
+
+      .side-stack {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .hover-panel,
+      .picked-panel,
+      .palette-panel {
+        flex: none;
+      }
+
+      .palette-panel {
+        grid-column: 1 / -1;
+        min-height: 220px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 12px;
+      }
+
+      .hero {
+        margin-bottom: 12px;
+      }
+
+      .eyebrow {
+        font-size: 10px;
+        letter-spacing: 0.16em;
+      }
+
+      h1 {
+        font-size: 30px;
+      }
+
+      .sub {
+        font-size: 12px;
+        line-height: 1.6;
+      }
+
+      .workspace {
+        gap: 14px;
+      }
+
+      .wheel-wrap {
+        padding: 10px;
+        border-radius: 22px;
+      }
+
+      .display-switch {
+        top: 10px;
+        right: 10px;
+        padding: 4px;
+        gap: 4px;
+      }
+
+      .display-button {
+        min-width: 58px;
+        padding: 5px 8px 6px;
+      }
+
+      .display-button .jp {
+        font-size: 11px;
+      }
+
+      .display-button .en {
+        font-size: 8px;
+      }
+
+      .center-readout {
+        width: 100%;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .value-badge {
+        padding: 9px 14px;
+        gap: 10px;
+      }
+
+      .value-badge-num {
+        font-size: 24px;
+        min-width: 46px;
+      }
+
+      .gray-preview-box {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+      }
+
+      .control-panel {
+        padding: 16px;
+      }
+
+      .panel-title {
+        font-size: 14px;
+      }
+
+      .panel-note {
+        font-size: 12px;
+        margin-bottom: 12px;
+      }
+
+      .tab-buttons {
+        margin-bottom: 14px;
+      }
+
+      .tab-button {
+        padding: 10px 8px;
+        font-size: 13px;
+      }
+
+      .input-preview-layout {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .field-column {
+        gap: 10px;
+      }
+
+      .field-line {
+        grid-template-columns: 22px 1fr;
+      }
+
+      .preview {
+        height: 86px;
+      }
+
+      .button-row {
+        margin-top: 14px;
+      }
+
+      .main-button {
+        width: 100%;
+      }
+
+      .slider-panel,
+      .number-panel {
+        padding: 14px;
+      }
+
+      .slider-track-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      input[type="range"] {
+        min-width: 0;
+        width: 100%;
+      }
+
+      .bottom-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      .number-panel {
+        flex: none;
+        max-width: none;
+      }
+
+      .number-row {
+        gap: 12px;
+      }
+
+      .number-label {
+        white-space: normal;
+      }
+
+      #valueNumber {
+        width: 96px;
+      }
+
+      .save-area {
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+      }
+
+      .save-options {
+        left: 0;
+        margin-right: 0;
+        font-size: 12px;
+      }
+
+      #saveButton {
+        padding: 11px 16px;
+      }
+
+      .side-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .hover-panel,
+      .picked-panel {
+        min-height: 170px;
+      }
+
+      .palette-panel {
+        min-height: 220px;
+      }
+
+      .palette-grid {
+        grid-template-columns: repeat(5, 1fr);
+      }
+
+      .sample-head,
+      .palette-head {
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding: 10px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      .panel {
+        border-radius: 18px;
+      }
+
+      .wheel-wrap {
+        border-radius: 20px;
+      }
+
+      .display-switch {
+        top: 8px;
+        right: 8px;
+      }
+
+      .display-button {
+        min-width: 52px;
+        padding: 4px 7px 5px;
+      }
+
+      .display-button .jp {
+        font-size: 10px;
+      }
+
+      .display-button .en {
+        font-size: 7px;
+      }
+
+      .value-badge-label {
+        font-size: 10px;
+      }
+
+      .value-badge-num {
+        font-size: 22px;
+      }
+
+      .gray-preview-box {
+        width: 44px;
+        height: 44px;
+      }
+
+      .save-area {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .save-options {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      #saveButton {
+        width: 100%;
+      }
+
+      .palette-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="hero">
+      <div class="eyebrow">VALUE PALETTE</div>
+      <h1>バリューパレット</h1>
+      <p class="sub">同じ濃さの色相環を作るツール。</p>
+    </div>
+
+    <div class="workspace">
+      <div class="side-stack">
+        <div class="panel sample-panel hover-panel">
+          <div class="sample-head">
+            <div class="sample-title">カーソル位置の色</div>
+            <div class="sample-badge">LIVE</div>
+          </div>
+          <div id="hoverSampleBox" class="sample-box"></div>
+          <div class="sample-info">
+            <span id="hoverSampleMain" class="sample-main">色相環にカーソルを合わせてください</span>
+            <span id="hoverSampleSub">VALUE: -</span>
+          </div>
+        </div>
+
+        <div class="panel sample-panel picked-panel">
+          <div class="sample-head">
+            <div class="sample-title">クリックで固定した色</div>
+            <div class="sample-badge">PICK</div>
+          </div>
+          <div id="pickedSampleBox" class="sample-box"></div>
+          <div class="sample-info">
+            <span id="pickedSampleMain" class="sample-main">まだ固定されていません</span>
+            <span id="pickedSampleSub">VALUE: -</span>
+          </div>
+          <div class="add-palette-row">
+            <button id="addPaletteButton" class="small-button">パレットに追加</button>
+          </div>
+        </div>
+
+        <div class="panel palette-panel">
+          <div class="palette-head">
+            <div class="palette-title">保存パレット</div>
+            <div class="palette-actions">
+              <div id="paletteCount" class="palette-count">0色</div>
+              <button id="resetPaletteButton" class="reset-button">リセット</button>
+            </div>
+          </div>
+          <p class="palette-desc">固定した色を追加すると、ここに保存されます。</p>
+          <div id="paletteGrid" class="palette-grid">
+            <div class="palette-empty">まだ色がありません。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wheel-stack">
+        <div class="wheel-wrap panel">
+          <div class="display-switch">
+            <button class="display-button active" data-mode="wheel">
+              <span class="jp">色相環</span>
+              <span class="en">WHEEL</span>
+            </button>
+            <button class="display-button" data-mode="strip">
+              <span class="jp">色相帯</span>
+              <span class="en">STRIP</span>
+            </button>
+          </div>
+          <canvas id="canvas" width="540" height="540"></canvas>
+        </div>
+
+        <div class="center-readout">
+          <div class="value-badge">
+            <span class="value-badge-label">VALUE</span>
+            <span id="readoutNum" class="value-badge-num">111</span>
+          </div>
+          <div id="grayPreview" class="gray-preview-box"></div>
+        </div>
+      </div>
+
+      <div class="control-stack">
+        <div class="panel control-panel">
+          <p class="panel-title">色からバリューを取得</p>
+          <p class="panel-note">入力した色を白黒化した時の濃さで、同バリューのパレットを作ります。</p>
+
+          <div class="tab-buttons">
+            <button class="tab-button active" data-tab="rgbPanel">RGB</button>
+            <button class="tab-button" data-tab="hsvPanel">HSV</button>
+            <button class="tab-button" data-tab="hexPanel">HEX</button>
+          </div>
+
+          <div id="rgbPanel" class="tab-panel active">
+            <div class="input-preview-layout">
+              <div class="field-column">
+                <div class="field-line">
+                  <span>R</span>
+                  <input id="rInput" type="number" min="0" max="255" value="87">
+                </div>
+                <div class="field-line">
+                  <span>G</span>
+                  <input id="gInput" type="number" min="0" max="255" value="109">
+                </div>
+                <div class="field-line">
+                  <span>B</span>
+                  <input id="bInput" type="number" min="0" max="255" value="181">
+                </div>
+              </div>
+
+              <span id="rgbPreview" class="preview"></span>
+            </div>
+
+            <div class="button-row">
+              <button id="makeFromRgbButton" class="main-button">RGBのバリューで作成</button>
+            </div>
+          </div>
+
+          <div id="hsvPanel" class="tab-panel">
+            <div class="input-preview-layout">
+              <div class="field-column">
+                <div class="field-line">
+                  <span>H</span>
+                  <input id="hInput" type="number" min="0" max="360" value="226">
+                </div>
+                <div class="field-line">
+                  <span>S</span>
+                  <input id="sInput" type="number" min="0" max="100" value="52">
+                </div>
+                <div class="field-line">
+                  <span>V</span>
+                  <input id="vInput" type="number" min="0" max="100" value="71">
+                </div>
+              </div>
+
+              <span id="hsvPreview" class="preview"></span>
+            </div>
+
+            <div class="button-row">
+              <button id="makeFromHsvButton" class="main-button">HSVのバリューで作成</button>
+            </div>
+          </div>
+
+          <div id="hexPanel" class="tab-panel">
+            <div class="input-preview-layout">
+              <div class="field-column">
+                <div class="field-line">
+                  <span>#</span>
+                  <input id="hexInput" type="text" value="#576DB5">
+                </div>
+              </div>
+
+              <span id="hexPreview" class="preview"></span>
+            </div>
+
+            <div class="button-row">
+              <button id="makeFromHexButton" class="main-button">HEXのバリューで作成</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel slider-panel">
+          <div class="slider-track-row">
+            <span class="slider-label">シークバーで調整</span>
+            <input id="valueSlider" type="range" min="0" max="255" value="111">
+          </div>
+        </div>
+
+        <div class="bottom-actions">
+          <div class="panel number-panel">
+            <div class="number-row">
+              <span class="number-label">バリューを<br>数値で指定</span>
+              <input id="valueNumber" type="number" min="0" max="255" value="111">
+            </div>
+          </div>
+
+          <div class="save-area">
+            <div class="save-options">
+              <label><input id="saveDisplayCheck" type="checkbox" checked>表示を保存</label>
+              <label><input id="savePaletteCheck" type="checkbox">パレットを保存</label>
+            </div>
+            <button id="saveButton">PNG保存</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    const displayButtons = document.querySelectorAll(".display-button");
+
+    const valueSlider = document.getElementById("valueSlider");
+    const valueNumber = document.getElementById("valueNumber");
+    const readoutNum = document.getElementById("readoutNum");
+    const grayPreview = document.getElementById("grayPreview");
+
+    const hoverSampleBox = document.getElementById("hoverSampleBox");
+    const hoverSampleMain = document.getElementById("hoverSampleMain");
+    const hoverSampleSub = document.getElementById("hoverSampleSub");
+
+    const pickedSampleBox = document.getElementById("pickedSampleBox");
+    const pickedSampleMain = document.getElementById("pickedSampleMain");
+    const pickedSampleSub = document.getElementById("pickedSampleSub");
+
+    const addPaletteButton = document.getElementById("addPaletteButton");
+    const resetPaletteButton = document.getElementById("resetPaletteButton");
+    const paletteGrid = document.getElementById("paletteGrid");
+    const paletteCount = document.getElementById("paletteCount");
+
+    const saveDisplayCheck = document.getElementById("saveDisplayCheck");
+    const savePaletteCheck = document.getElementById("savePaletteCheck");
+
+    const rInput = document.getElementById("rInput");
+    const gInput = document.getElementById("gInput");
+    const bInput = document.getElementById("bInput");
+
+    const hInput = document.getElementById("hInput");
+    const sInput = document.getElementById("sInput");
+    const vInput = document.getElementById("vInput");
+
+    const hexInput = document.getElementById("hexInput");
+
+    const rgbPreview = document.getElementById("rgbPreview");
+    const hsvPreview = document.getElementById("hsvPreview");
+    const hexPreview = document.getElementById("hexPreview");
+
+    const makeFromRgbButton = document.getElementById("makeFromRgbButton");
+    const makeFromHsvButton = document.getElementById("makeFromHsvButton");
+    const makeFromHexButton = document.getElementById("makeFromHexButton");
+
+    let pickedColor = null;
+    let savedPalette = [];
+    let displayMode = "wheel";
+
+    function getValue(r, g, b) {
+      return Math.round(0.299 * r + 0.587 * g + 0.114 * b);
+    }
+
+    function clamp(value, min, max) {
+      value = Math.round(Number(value));
+
+      if (Number.isNaN(value)) value = min;
+      if (value < min) value = min;
+      if (value > max) value = max;
+
+      return value;
+    }
+
+    function clampByte(value) {
+      return clamp(value, 0, 255);
+    }
+
+    function rgbToHex(r, g, b) {
+      return "#" + [r, g, b].map(function (value) {
+        return value.toString(16).padStart(2, "0").toUpperCase();
+      }).join("");
+    }
+
+    function rgbToHsv(r, g, b) {
+      r = r / 255;
+      g = g / 255;
+      b = b / 255;
+
+      const max = Math.max(r, g, b);
+      const min = Math.min(r, g, b);
+      const diff = max - min;
+
+      let h = 0;
+
+      if (diff === 0) {
+        h = 0;
+      } else if (max === r) {
+        h = 60 * (((g - b) / diff) % 6);
+      } else if (max === g) {
+        h = 60 * ((b - r) / diff + 2);
+      } else {
+        h = 60 * ((r - g) / diff + 4);
+      }
+
+      if (h < 0) {
+        h += 360;
+      }
+
+      const s = max === 0 ? 0 : diff / max;
+      const v = max;
+
+      return [
+        Math.round(h),
+        Math.round(s * 100),
+        Math.round(v * 100)
+      ];
+    }
+
+    function hexToRgb(hex) {
+      hex = hex.trim();
+
+      if (hex.startsWith("#")) {
+        hex = hex.slice(1);
+      }
+
+      if (!/^[0-9a-fA-F]{6}$/.test(hex)) {
+        return null;
+      }
+
+      return [
+        parseInt(hex.slice(0, 2), 16),
+        parseInt(hex.slice(2, 4), 16),
+        parseInt(hex.slice(4, 6), 16)
+      ];
+    }
+
+    function hsvToRgb(h, s, v) {
+      h = ((h % 360) + 360) % 360;
+      s = s / 100;
+      v = v / 255;
+
+      const c = v * s;
+      const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+      const m = v - c;
+
+      let r = 0;
+      let g = 0;
+      let b = 0;
+
+      if (h < 60) {
+        r = c; g = x; b = 0;
+      } else if (h < 120) {
+        r = x; g = c; b = 0;
+      } else if (h < 180) {
+        r = 0; g = c; b = x;
+      } else if (h < 240) {
+        r = 0; g = x; b = c;
+      } else if (h < 300) {
+        r = x; g = 0; b = c;
+      } else {
+        r = c; g = 0; b = x;
+      }
+
+      return [
+        Math.round((r + m) * 255),
+        Math.round((g + m) * 255),
+        Math.round((b + m) * 255)
+      ];
+    }
+
+    function hsvPercentToRgb(h, s, v) {
+      return hsvToRgb(h, s, Math.round(v / 100 * 255));
+    }
+
+    function findColorForHue(h, target) {
+      for (let s = 100; s >= 0; s--) {
+        for (let v = 0; v <= 255; v++) {
+          const rgb = hsvToRgb(h, s, v);
+
+          if (getValue(rgb[0], rgb[1], rgb[2]) === target) {
+            return rgb;
+          }
+        }
+      }
+
+      return [target, target, target];
+    }
+
+    function mixColor(a, b, t) {
+      return [
+        Math.round(a[0] * (1 - t) + b[0] * t),
+        Math.round(a[1] * (1 - t) + b[1] * t),
+        Math.round(a[2] * (1 - t) + b[2] * t)
+      ];
+    }
+
+    function fixToTargetValue(rgb, target) {
+      let r = rgb[0];
+      let g = rgb[1];
+      let b = rgb[2];
+
+      for (let i = 0; i < 200; i++) {
+        const value = getValue(r, g, b);
+
+        if (value === target) {
+          return [r, g, b];
+        }
+
+        if (value < target) {
+          if (g < 255) g++;
+          else if (r < 255) r++;
+          else if (b < 255) b++;
+        } else {
+          if (g > 0) g--;
+          else if (r > 0) r--;
+          else if (b > 0) b--;
+        }
+      }
+
+      return [r, g, b];
+    }
+
+    function createAnchors(targetValue) {
+      const anchors = [];
+
+      for (let h = 0; h < 360; h += 30) {
+        anchors.push(findColorForHue(h, targetValue));
+      }
+
+      return anchors;
+    }
+
+    function getHueColor(h, anchors) {
+      const normalized = ((h % 360) + 360) % 360;
+      const section = normalized / 30;
+      const index = Math.floor(section);
+      const rate = section - index;
+
+      const colorA = anchors[index];
+      const colorB = anchors[(index + 1) % anchors.length];
+
+      return mixColor(colorA, colorB, rate);
+    }
+
+    function draw(targetValue) {
+      if (displayMode === "strip") {
+        drawStrip(targetValue);
+      } else {
+        drawWheel(targetValue);
+      }
+    }
+
+    function drawWheel(targetValue) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const radius = 220;
+      const grayBase = [targetValue, targetValue, targetValue];
+      const anchors = createAnchors(targetValue);
+
+      const image = ctx.createImageData(canvas.width, canvas.height);
+      const data = image.data;
+
+      function setPixel(x, y, r, g, b, a) {
+        const index = (y * canvas.width + x) * 4;
+        data[index] = r;
+        data[index + 1] = g;
+        data[index + 2] = b;
+        data[index + 3] = a;
+      }
+
+      for (let y = centerY - radius; y <= centerY + radius; y++) {
+        for (let x = centerX - radius; x <= centerX + radius; x++) {
+          const dx = x - centerX;
+          const dy = y - centerY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance <= radius) {
+            const saturation = distance / radius;
+            let hue = Math.atan2(dy, dx) * 180 / Math.PI;
+
+            if (hue < 0) {
+              hue += 360;
+            }
+
+            const hueColor = getHueColor(hue, anchors);
+            let color = mixColor(grayBase, hueColor, saturation);
+            color = fixToTargetValue(color, targetValue);
+
+            setPixel(x, y, color[0], color[1], color[2], 255);
+          }
+        }
+      }
+
+      ctx.putImageData(image, 0, 0);
+    }
+
+    function drawStrip(targetValue) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const left = 34;
+      const top = 58;
+      const width = 472;
+      const height = 424;
+      const grayBase = [targetValue, targetValue, targetValue];
+      const anchors = createAnchors(targetValue);
+
+      const image = ctx.createImageData(canvas.width, canvas.height);
+      const data = image.data;
+
+      function setPixel(x, y, r, g, b, a) {
+        const index = (y * canvas.width + x) * 4;
+        data[index] = r;
+        data[index + 1] = g;
+        data[index + 2] = b;
+        data[index + 3] = a;
+      }
+
+      for (let y = 0; y < height; y++) {
+        const saturation = 1 - y / (height - 1);
+
+        for (let x = 0; x < width; x++) {
+          const hue = x / (width - 1) * 360;
+          const hueColor = getHueColor(hue, anchors);
+          let color = mixColor(grayBase, hueColor, saturation);
+          color = fixToTargetValue(color, targetValue);
+
+          setPixel(left + x, top + y, color[0], color[1], color[2], 255);
+        }
+      }
+
+      ctx.putImageData(image, 0, 0);
+    }
+
+    function updateDisplayButtons() {
+      displayButtons.forEach(function (button) {
+        if (button.dataset.mode === displayMode) {
+          button.classList.add("active");
+        } else {
+          button.classList.remove("active");
+        }
+      });
+    }
+
+    function getActiveTabType() {
+      const activeButton = document.querySelector(".tab-button.active");
+
+      if (activeButton.dataset.tab === "hsvPanel") {
+        return "hsv";
+      }
+
+      if (activeButton.dataset.tab === "hexPanel") {
+        return "hex";
+      }
+
+      return "rgb";
+    }
+
+    function formatColorForActiveTab(color) {
+      const r = color[0];
+      const g = color[1];
+      const b = color[2];
+      const activeTabType = getActiveTabType();
+
+      if (activeTabType === "hsv") {
+        const hsv = rgbToHsv(r, g, b);
+        return `HSV(${hsv[0]}, ${hsv[1]}, ${hsv[2]})`;
+      }
+
+      if (activeTabType === "hex") {
+        return rgbToHex(r, g, b);
+      }
+
+      return `RGB(${r}, ${g}, ${b})`;
+    }
+
+    function updateSample(box, main, sub, color) {
+      const r = color[0];
+      const g = color[1];
+      const b = color[2];
+      const value = getValue(r, g, b);
+
+      box.style.background = `rgb(${r}, ${g}, ${b})`;
+      main.textContent = formatColorForActiveTab(color);
+      sub.textContent = `VALUE: ${value}`;
+    }
+
+    function resetHoverSample() {
+      hoverSampleBox.style.background =
+        "linear-gradient(135deg, rgba(255,255,255,0.45), rgba(240,225,205,0.55))";
+      hoverSampleMain.textContent = "色相環にカーソルを合わせてください";
+      hoverSampleSub.textContent = "VALUE: -";
+    }
+
+    function getCanvasColorFromEvent(event) {
+      const rect = canvas.getBoundingClientRect();
+      const x = Math.floor((event.clientX - rect.left) * canvas.width / rect.width);
+      const y = Math.floor((event.clientY - rect.top) * canvas.height / rect.height);
+
+      if (x < 0 || x >= canvas.width || y < 0 || y >= canvas.height) {
+        return null;
+      }
+
+      const pixel = ctx.getImageData(x, y, 1, 1).data;
+
+      if (pixel[3] === 0) {
+        return null;
+      }
+
+      return [pixel[0], pixel[1], pixel[2]];
+    }
+
+    function renderPalette() {
+      paletteGrid.innerHTML = "";
+      paletteCount.textContent = `${savedPalette.length}色`;
+
+      if (savedPalette.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "palette-empty";
+        empty.textContent = "まだ色がありません。";
+        paletteGrid.appendChild(empty);
+        return;
+      }
+
+      savedPalette.forEach(function (color) {
+        const swatch = document.createElement("div");
+        swatch.className = "palette-swatch";
+        swatch.style.backgroundColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+        swatch.title = `${rgbToHex(color[0], color[1], color[2])} / VALUE ${getValue(color[0], color[1], color[2])}`;
+        paletteGrid.appendChild(swatch);
+      });
+    }
+
+    function canvasToBlob(targetCanvas) {
+      return new Promise(function (resolve) {
+        targetCanvas.toBlob(function (blob) {
+          resolve(blob);
+        }, "image/png");
+      });
+    }
+
+    async function saveCanvasAsPng(targetCanvas, filename) {
+      const blob = await canvasToBlob(targetCanvas);
+
+      if (window.showSaveFilePicker) {
+        try {
+          const fileHandle = await window.showSaveFilePicker({
+            suggestedName: filename,
+            types: [
+              {
+                description: "PNG画像",
+                accept: {
+                  "image/png": [".png"]
+                }
+              }
+            ]
+          });
+
+          const writable = await fileHandle.createWritable();
+          await writable.write(blob);
+          await writable.close();
+          return;
+        } catch (error) {
+          return;
+        }
+      }
+
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
+    function createDisplayExportCanvas() {
+      const exportCanvas = document.createElement("canvas");
+      exportCanvas.width = canvas.width;
+      exportCanvas.height = canvas.height;
+
+      const exportCtx = exportCanvas.getContext("2d");
+      exportCtx.clearRect(0, 0, exportCanvas.width, exportCanvas.height);
+      exportCtx.drawImage(canvas, 0, 0);
+
+      return exportCanvas;
+    }
+
+    function createPaletteCanvas() {
+      const swatchSize = 90;
+      const gap = 12;
+      const padding = 24;
+      const columns = 6;
+      const colorCount = Math.max(savedPalette.length, 1);
+      const rows = Math.ceil(colorCount / columns);
+      const width = padding * 2 + columns * swatchSize + (columns - 1) * gap;
+      const height = padding * 2 + rows * swatchSize + (rows - 1) * gap;
+
+      const paletteCanvas = document.createElement("canvas");
+      paletteCanvas.width = width;
+      paletteCanvas.height = height;
+
+      const paletteCtx = paletteCanvas.getContext("2d");
+      paletteCtx.fillStyle = "#fffaf2";
+      paletteCtx.fillRect(0, 0, width, height);
+
+      if (savedPalette.length === 0) {
+        paletteCtx.fillStyle = "#7f6d5a";
+        paletteCtx.font = "24px sans-serif";
+        paletteCtx.fillText("パレットに色がありません", padding, padding + 40);
+        return paletteCanvas;
+      }
+
+      savedPalette.forEach(function (color, index) {
+        const col = index % columns;
+        const row = Math.floor(index / columns);
+        const x = padding + col * (swatchSize + gap);
+        const y = padding + row * (swatchSize + gap);
+
+        paletteCtx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+        paletteCtx.fillRect(x, y, swatchSize, swatchSize);
+      });
+
+      return paletteCanvas;
+    }
+
+    function createCombinedCanvas() {
+      const displayCanvas = createDisplayExportCanvas();
+      const paletteCanvas = createPaletteCanvas();
+
+      const padding = 28;
+      const gap = 24;
+      const width = Math.max(displayCanvas.width, paletteCanvas.width) + padding * 2;
+      const height = displayCanvas.height + paletteCanvas.height + gap + padding * 2;
+
+      const combinedCanvas = document.createElement("canvas");
+      combinedCanvas.width = width;
+      combinedCanvas.height = height;
+
+      const combinedCtx = combinedCanvas.getContext("2d");
+      combinedCtx.fillStyle = "#fffaf2";
+      combinedCtx.fillRect(0, 0, width, height);
+
+      combinedCtx.drawImage(
+        displayCanvas,
+        Math.round((width - displayCanvas.width) / 2),
+        padding
+      );
+
+      combinedCtx.drawImage(
+        paletteCanvas,
+        Math.round((width - paletteCanvas.width) / 2),
+        padding + displayCanvas.height + gap
+      );
+
+      return combinedCanvas;
+    }
+
+    function updateValue(value) {
+      const targetValue = clampByte(value);
+
+      valueSlider.value = targetValue;
+      valueNumber.value = targetValue;
+      readoutNum.textContent = targetValue;
+      grayPreview.style.backgroundColor = `rgb(${targetValue}, ${targetValue}, ${targetValue})`;
+
+      draw(targetValue);
+
+      if (pickedColor !== null) {
+        updateSample(pickedSampleBox, pickedSampleMain, pickedSampleSub, pickedColor);
+      }
+    }
+
+    function updateRgbPreview() {
+      const r = clampByte(rInput.value);
+      const g = clampByte(gInput.value);
+      const b = clampByte(bInput.value);
+
+      rInput.value = r;
+      gInput.value = g;
+      bInput.value = b;
+
+      rgbPreview.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+    }
+
+    function updateHsvPreview() {
+      const h = clamp(hInput.value, 0, 360);
+      const s = clamp(sInput.value, 0, 100);
+      const v = clamp(vInput.value, 0, 100);
+
+      hInput.value = h;
+      sInput.value = s;
+      vInput.value = v;
+
+      const rgb = hsvPercentToRgb(h, s, v);
+
+      hsvPreview.style.backgroundColor = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+    }
+
+    function updateHexPreview() {
+      const rgb = hexToRgb(hexInput.value);
+
+      if (rgb === null) {
+        hexPreview.style.backgroundColor = "#ffffff";
+        return;
+      }
+
+      hexPreview.style.backgroundColor = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+    }
+
+    function switchTab(panelId) {
+      const buttons = document.querySelectorAll(".tab-button");
+      const panels = document.querySelectorAll(".tab-panel");
+
+      buttons.forEach(function (button) {
+        if (button.dataset.tab === panelId) {
+          button.classList.add("active");
+        } else {
+          button.classList.remove("active");
+        }
+      });
+
+      panels.forEach(function (panel) {
+        if (panel.id === panelId) {
+          panel.classList.add("active");
+        } else {
+          panel.classList.remove("active");
+        }
+      });
+
+      if (pickedColor !== null) {
+        updateSample(pickedSampleBox, pickedSampleMain, pickedSampleSub, pickedColor);
+      }
+    }
+
+    document.querySelectorAll(".tab-button").forEach(function (button) {
+      button.addEventListener("click", function () {
+        switchTab(button.dataset.tab);
+      });
+    });
+
+    displayButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        displayMode = button.dataset.mode;
+        updateDisplayButtons();
+        updateValue(valueNumber.value);
+        resetHoverSample();
+      });
+    });
+
+    canvas.addEventListener("mousemove", function (event) {
+      const color = getCanvasColorFromEvent(event);
+
+      if (color === null) {
+        resetHoverSample();
+        return;
+      }
+
+      updateSample(hoverSampleBox, hoverSampleMain, hoverSampleSub, color);
+    });
+
+    canvas.addEventListener("mouseleave", function () {
+      resetHoverSample();
+    });
+
+    canvas.addEventListener("click", function (event) {
+      const color = getCanvasColorFromEvent(event);
+
+      if (color === null) {
+        return;
+      }
+
+      pickedColor = color;
+      updateSample(pickedSampleBox, pickedSampleMain, pickedSampleSub, pickedColor);
+    });
+
+    addPaletteButton.addEventListener("click", function () {
+      if (pickedColor === null) {
+        return;
+      }
+
+      savedPalette.push([pickedColor[0], pickedColor[1], pickedColor[2]]);
+      renderPalette();
+    });
+
+    resetPaletteButton.addEventListener("click", function () {
+      savedPalette = [];
+      renderPalette();
+    });
+
+    makeFromRgbButton.addEventListener("click", function () {
+      const r = clampByte(rInput.value);
+      const g = clampByte(gInput.value);
+      const b = clampByte(bInput.value);
+      const value = getValue(r, g, b);
+
+      updateRgbPreview();
+      updateValue(value);
+    });
+
+    makeFromHsvButton.addEventListener("click", function () {
+      const h = clamp(hInput.value, 0, 360);
+      const s = clamp(sInput.value, 0, 100);
+      const v = clamp(vInput.value, 0, 100);
+      const rgb = hsvPercentToRgb(h, s, v);
+      const value = getValue(rgb[0], rgb[1], rgb[2]);
+
+      updateHsvPreview();
+      updateValue(value);
+    });
+
+    makeFromHexButton.addEventListener("click", function () {
+      const rgb = hexToRgb(hexInput.value);
+
+      if (rgb === null) {
+        updateHexPreview();
+        return;
+      }
+
+      const value = getValue(rgb[0], rgb[1], rgb[2]);
+
+      updateHexPreview();
+      updateValue(value);
+    });
+
+    rInput.addEventListener("input", updateRgbPreview);
+    gInput.addEventListener("input", updateRgbPreview);
+    bInput.addEventListener("input", updateRgbPreview);
+
+    hInput.addEventListener("input", updateHsvPreview);
+    sInput.addEventListener("input", updateHsvPreview);
+    vInput.addEventListener("input", updateHsvPreview);
+
+    hexInput.addEventListener("input", updateHexPreview);
+
+    valueSlider.addEventListener("input", function () {
+      updateValue(valueSlider.value);
+    });
+
+    valueNumber.addEventListener("input", function () {
+      updateValue(valueNumber.value);
+    });
+
+    document.getElementById("saveButton").addEventListener("click", async function () {
+      const saveDisplay = saveDisplayCheck.checked;
+      const savePalette = savePaletteCheck.checked;
+
+      if (!saveDisplay && !savePalette) {
+        return;
+      }
+
+      if (saveDisplay && savePalette) {
+        await saveCanvasAsPng(createCombinedCanvas(), "value-display-and-palette.png");
+        return;
+      }
+
+      if (saveDisplay) {
+        await saveCanvasAsPng(createDisplayExportCanvas(), "value-display.png");
+        return;
+      }
+
+      if (savePalette) {
+        await saveCanvasAsPng(createPaletteCanvas(), "value-palette.png");
+      }
+    });
+
+    updateDisplayButtons();
+    updateRgbPreview();
+    updateHsvPreview();
+    updateHexPreview();
+    renderPalette();
+    updateValue(111);
+  </script>
+</body>
+</html>
