@@ -266,7 +266,7 @@
       position: absolute;
       top: 18px;
       right: 18px;
-      z-index: 2;
+      z-index: 4;
       display: flex;
       gap: 5px;
       padding: 5px;
@@ -308,17 +308,27 @@
       box-shadow: 0 5px 14px rgba(201, 122, 43, 0.24);
     }
 
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-width: 540px;
+      background: transparent;
+      cursor: crosshair;
+      touch-action: none;
+    }
+
     .touch-bubble {
       display: none;
       position: absolute;
-      z-index: 5;
-      min-width: 164px;
-      padding: 9px;
+      z-index: 8;
+      width: 180px;
+      padding: 8px;
       border-radius: 16px;
-      background: rgba(255, 250, 242, 0.96);
+      background: rgba(255, 250, 242, 0.97);
       border: 1px solid var(--line);
-      box-shadow: 0 12px 34px rgba(44, 36, 28, 0.22);
-      gap: 8px;
+      box-shadow: 0 14px 34px rgba(44, 36, 28, 0.24);
+      gap: 7px;
       align-items: center;
       pointer-events: auto;
     }
@@ -338,8 +348,8 @@
     .touch-bubble-text {
       flex: 1;
       min-width: 0;
+      line-height: 1.2;
       font-family: "Consolas", "Menlo", monospace;
-      line-height: 1.25;
     }
 
     .touch-bubble-main {
@@ -364,16 +374,6 @@
       font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
-    }
-
-    canvas {
-      display: block;
-      width: 100%;
-      height: auto;
-      max-width: 540px;
-      background: transparent;
-      cursor: crosshair;
-      touch-action: none;
     }
 
     .center-readout {
@@ -508,12 +508,8 @@
       width: 100%;
     }
 
-    .value-number-control {
-      width: 84px;
-      flex: 0 0 auto;
-    }
-
-    .mobile-stepper {
+    .mobile-stepper,
+    .slider-step-button {
       display: none;
     }
 
@@ -646,6 +642,11 @@
       line-height: 1.35;
     }
 
+    .value-number-control {
+      width: 84px;
+      flex: 0 0 auto;
+    }
+
     #valueNumber {
       width: 100%;
     }
@@ -751,13 +752,17 @@
       }
     }
 
-    @media (max-width: 640px) {
+    @media (max-width: 768px) {
       body {
-        padding: 8px;
+        padding: 6px;
+      }
+
+      .page {
+        max-width: none;
       }
 
       .hero {
-        margin-bottom: 10px;
+        margin: 0 4px 8px;
       }
 
       .eyebrow {
@@ -766,113 +771,136 @@
       }
 
       h1 {
-        font-size: 30px;
+        font-size: 28px;
       }
 
       .sub {
         font-size: 12px;
-        line-height: 1.6;
+        line-height: 1.5;
+        margin-top: 5px;
       }
 
       .workspace {
-        gap: 12px;
+        gap: 10px;
+      }
+
+      .wheel-stack {
+        gap: 9px;
       }
 
       .wheel-wrap {
-        width: calc(100vw - 16px);
+        width: calc(100vw - 12px);
         max-width: none;
-        padding: 4px;
-        border-radius: 20px;
+        padding: 2px;
+        border-radius: 18px;
+      }
+
+      canvas {
+        width: 100%;
+        max-width: none;
       }
 
       .display-switch {
-        top: 8px;
-        right: 8px;
+        top: 6px;
+        right: 6px;
         padding: 4px;
         gap: 4px;
       }
 
       .display-button {
-        min-width: 58px;
-        padding: 5px 8px 6px;
+        min-width: 52px;
+        padding: 4px 7px 5px;
       }
 
       .display-button .jp {
-        font-size: 11px;
+        font-size: 10px;
       }
 
       .display-button .en {
-        font-size: 8px;
+        font-size: 7px;
+      }
+
+      .touch-bubble {
+        width: 176px;
+        padding: 7px;
       }
 
       .center-readout {
         width: 100%;
         justify-content: center;
-        gap: 10px;
+        gap: 9px;
       }
 
       .value-badge {
-        padding: 9px 14px;
-        gap: 10px;
+        padding: 8px 13px;
+        gap: 9px;
+      }
+
+      .value-badge-label {
+        font-size: 10px;
       }
 
       .value-badge-num {
-        font-size: 24px;
-        min-width: 46px;
+        font-size: 23px;
+        min-width: 44px;
       }
 
       .gray-preview-box {
-        width: 48px;
-        height: 48px;
+        width: 44px;
+        height: 44px;
         border-radius: 12px;
       }
 
       .control-panel {
-        padding: 16px;
+        padding: 13px;
       }
 
       .panel-title {
         font-size: 14px;
+        margin-bottom: 7px;
       }
 
       .panel-note {
         font-size: 12px;
-        margin-bottom: 12px;
+        margin-bottom: 11px;
+        line-height: 1.5;
       }
 
       .tab-buttons {
-        margin-bottom: 14px;
+        margin-bottom: 12px;
       }
 
       .tab-button {
-        padding: 10px 8px;
+        padding: 9px 8px;
         font-size: 13px;
       }
 
       .input-preview-layout {
-        grid-template-columns: 1fr;
-        gap: 12px;
+        grid-template-columns: 1fr 82px;
+        gap: 10px;
+        align-items: stretch;
       }
 
       .field-column {
-        gap: 10px;
+        gap: 8px;
       }
 
       .field-line {
         grid-template-columns: 22px 1fr;
+        gap: 6px;
       }
 
       .number-control {
         display: grid;
-        grid-template-columns: 1fr 34px;
-        gap: 6px;
+        grid-template-columns: minmax(0, 1fr) 36px;
+        gap: 5px;
         align-items: stretch;
       }
 
       .mobile-stepper {
         display: grid;
         grid-template-rows: 1fr 1fr;
-        gap: 4px;
+        gap: 3px;
       }
 
       .step-button {
@@ -884,6 +912,7 @@
         font-weight: 700;
         line-height: 1;
         padding: 0;
+        cursor: pointer;
       }
 
       .step-button:active {
@@ -891,12 +920,19 @@
         color: white;
       }
 
+      input[type="number"],
+      input[type="text"] {
+        padding: 9px 8px;
+        font-size: 14px;
+      }
+
       .preview {
-        height: 86px;
+        height: auto;
+        min-height: 100%;
       }
 
       .button-row {
-        margin-top: 14px;
+        margin-top: 11px;
       }
 
       .main-button {
@@ -905,13 +941,39 @@
 
       .slider-panel,
       .number-panel {
-        padding: 14px;
+        padding: 12px;
       }
 
       .slider-track-row {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 9px;
+      }
+
+      .slider-control-row {
+        display: grid;
+        grid-template-columns: 38px 1fr 38px;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .slider-step-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 38px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fffaf2;
+        color: var(--muted);
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .slider-step-button:active {
+        background: var(--accent);
+        color: white;
       }
 
       input[type="range"] {
@@ -921,13 +983,13 @@
       }
 
       input[type="range"]::-webkit-slider-thumb {
-        width: 32px;
-        height: 32px;
+        width: 34px;
+        height: 34px;
       }
 
       input[type="range"]::-moz-range-thumb {
-        width: 32px;
-        height: 32px;
+        width: 34px;
+        height: 34px;
       }
 
       .bottom-actions {
@@ -950,7 +1012,7 @@
       }
 
       .value-number-control {
-        width: 126px;
+        width: 142px;
       }
 
       .save-area {
@@ -973,7 +1035,7 @@
       .side-stack {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 10px;
       }
 
       .hover-panel,
@@ -982,7 +1044,8 @@
       }
 
       .palette-panel {
-        min-height: 220px;
+        min-height: 190px;
+        padding: 13px;
       }
 
       .palette-grid {
@@ -997,51 +1060,29 @@
 
     @media (max-width: 420px) {
       body {
-        padding: 6px;
+        padding: 4px;
+      }
+
+      .hero {
+        margin: 0 3px 7px;
       }
 
       h1 {
-        font-size: 28px;
-      }
-
-      .panel {
-        border-radius: 18px;
+        font-size: 27px;
       }
 
       .wheel-wrap {
-        width: calc(100vw - 12px);
-        border-radius: 18px;
+        width: calc(100vw - 8px);
+        border-radius: 16px;
       }
 
-      .display-switch {
-        top: 6px;
-        right: 6px;
+      .input-preview-layout {
+        grid-template-columns: 1fr 74px;
+        gap: 8px;
       }
 
-      .display-button {
-        min-width: 52px;
-        padding: 4px 7px 5px;
-      }
-
-      .display-button .jp {
-        font-size: 10px;
-      }
-
-      .display-button .en {
-        font-size: 7px;
-      }
-
-      .value-badge-label {
-        font-size: 10px;
-      }
-
-      .value-badge-num {
-        font-size: 22px;
-      }
-
-      .gray-preview-box {
-        width: 44px;
-        height: 44px;
+      .number-control {
+        grid-template-columns: minmax(0, 1fr) 34px;
       }
 
       .save-area {
@@ -1135,8 +1176,8 @@
           <div id="touchBubble" class="touch-bubble">
             <div id="touchBubbleColor" class="touch-bubble-color"></div>
             <div class="touch-bubble-text">
-              <div id="touchBubbleMain" class="touch-bubble-main">RGB</div>
-              <div id="touchBubbleSub" class="touch-bubble-sub">VALUE</div>
+              <div id="touchBubbleMain" class="touch-bubble-main">#------</div>
+              <div id="touchBubbleSub" class="touch-bubble-sub">VALUE -</div>
             </div>
             <button id="touchAddButton" class="touch-add-button">追加</button>
           </div>
@@ -1269,7 +1310,11 @@
         <div class="panel slider-panel">
           <div class="slider-track-row">
             <span class="slider-label">シークバーで調整</span>
-            <input id="valueSlider" type="range" min="0" max="255" value="111">
+            <div class="slider-control-row">
+              <button class="slider-step-button" data-target="valueNumber" data-step="-1">−</button>
+              <input id="valueSlider" type="range" min="0" max="255" value="111">
+              <button class="slider-step-button" data-target="valueNumber" data-step="1">＋</button>
+            </div>
           </div>
         </div>
 
@@ -1356,9 +1401,11 @@
     let displayMode = "wheel";
     let isTouchDragging = false;
     let touchDragColor = null;
+    let repeatTimer = null;
+    let repeatInterval = null;
 
     function isPhoneLayout() {
-      return window.matchMedia("(max-width: 640px)").matches;
+      return window.matchMedia("(max-width: 768px)").matches;
     }
 
     function getValue(r, g, b) {
@@ -1559,7 +1606,7 @@
 
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
-      const radius = isPhoneLayout() ? 254 : 220;
+      const radius = isPhoneLayout() ? 266 : 220;
       const grayBase = [targetValue, targetValue, targetValue];
       const anchors = createAnchors(targetValue);
 
@@ -1574,13 +1621,13 @@
         data[index + 3] = a;
       }
 
-      for (let y = centerY - radius; y <= centerY + radius; y++) {
-        for (let x = centerX - radius; x <= centerX + radius; x++) {
+      for (let y = Math.floor(centerY - radius); y <= Math.ceil(centerY + radius); y++) {
+        for (let x = Math.floor(centerX - radius); x <= Math.ceil(centerX + radius); x++) {
           const dx = x - centerX;
           const dy = y - centerY;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance <= radius) {
+          if (x >= 0 && x < canvas.width && y >= 0 && y < canvas.height && distance <= radius) {
             const saturation = distance / radius;
             let hue = Math.atan2(dy, dx) * 180 / Math.PI;
 
@@ -1603,10 +1650,10 @@
     function drawStrip(targetValue) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      const left = isPhoneLayout() ? 12 : 34;
-      const top = isPhoneLayout() ? 56 : 58;
-      const width = isPhoneLayout() ? 516 : 472;
-      const height = isPhoneLayout() ? 462 : 424;
+      const left = isPhoneLayout() ? 6 : 34;
+      const top = isPhoneLayout() ? 46 : 58;
+      const width = isPhoneLayout() ? 528 : 472;
+      const height = isPhoneLayout() ? 486 : 424;
       const grayBase = [targetValue, targetValue, targetValue];
       const anchors = createAnchors(targetValue);
 
@@ -1697,10 +1744,10 @@
       hoverSampleSub.textContent = "VALUE: -";
     }
 
-    function getCanvasColorFromEvent(event) {
+    function getCanvasColorFromPoint(clientX, clientY) {
       const rect = canvas.getBoundingClientRect();
-      const x = Math.floor((event.clientX - rect.left) * canvas.width / rect.width);
-      const y = Math.floor((event.clientY - rect.top) * canvas.height / rect.height);
+      const x = Math.floor((clientX - rect.left) * canvas.width / rect.width);
+      const y = Math.floor((clientY - rect.top) * canvas.height / rect.height);
 
       if (x < 0 || x >= canvas.width || y < 0 || y >= canvas.height) {
         return null;
@@ -1715,16 +1762,20 @@
       return [pixel[0], pixel[1], pixel[2]];
     }
 
-    function positionTouchBubble(event, color) {
+    function getCanvasColorFromEvent(event) {
+      return getCanvasColorFromPoint(event.clientX, event.clientY);
+    }
+
+    function positionTouchBubble(clientX, clientY, color) {
       const wrapRect = wheelWrap.getBoundingClientRect();
-      let x = event.clientX - wrapRect.left + 10;
-      let y = event.clientY - wrapRect.top - 58;
+      let x = clientX - wrapRect.left + 10;
+      let y = clientY - wrapRect.top - 60;
 
-      const bubbleWidth = 172;
-      const bubbleHeight = 56;
+      const bubbleWidth = 180;
+      const bubbleHeight = 54;
 
-      x = Math.max(8, Math.min(x, wrapRect.width - bubbleWidth - 8));
-      y = Math.max(8, Math.min(y, wrapRect.height - bubbleHeight - 8));
+      x = Math.max(6, Math.min(x, wrapRect.width - bubbleWidth - 6));
+      y = Math.max(6, Math.min(y, wrapRect.height - bubbleHeight - 6));
 
       touchBubble.style.left = x + "px";
       touchBubble.style.top = y + "px";
@@ -1974,6 +2025,30 @@
       }
     }
 
+    function changeNumberValue(targetId, step) {
+      const target = document.getElementById(targetId);
+      const min = Number(target.min || 0);
+      const max = Number(target.max || 255);
+      const current = Number(target.value);
+      const next = clamp(current + step, min, max);
+
+      target.value = next;
+      target.dispatchEvent(new Event("input", { bubbles: true }));
+
+      if (target.id === "valueNumber") {
+        updateValue(target.value);
+      }
+
+      hideTouchBubble();
+    }
+
+    function stopRepeat() {
+      clearTimeout(repeatTimer);
+      clearInterval(repeatInterval);
+      repeatTimer = null;
+      repeatInterval = null;
+    }
+
     document.querySelectorAll(".tab-button").forEach(function (button) {
       button.addEventListener("click", function () {
         switchTab(button.dataset.tab);
@@ -1988,6 +2063,29 @@
         resetHoverSample();
         hideTouchBubble();
       });
+    });
+
+    canvas.addEventListener("pointerdown", function (event) {
+      const color = getCanvasColorFromEvent(event);
+
+      if (color === null) {
+        return;
+      }
+
+      if (event.pointerType === "touch" && isPhoneLayout()) {
+        event.preventDefault();
+
+        isTouchDragging = true;
+        touchDragColor = color;
+        canvas.setPointerCapture(event.pointerId);
+
+        updateSample(hoverSampleBox, hoverSampleMain, hoverSampleSub, color);
+        positionTouchBubble(event.clientX, event.clientY, color);
+        return;
+      }
+
+      pickedColor = color;
+      updateSample(pickedSampleBox, pickedSampleMain, pickedSampleSub, pickedColor);
     });
 
     canvas.addEventListener("pointermove", function (event) {
@@ -2006,7 +2104,7 @@
 
         touchDragColor = color;
         updateSample(hoverSampleBox, hoverSampleMain, hoverSampleSub, color);
-        positionTouchBubble(event, color);
+        positionTouchBubble(event.clientX, event.clientY, color);
         return;
       }
 
@@ -2018,29 +2116,6 @@
       updateSample(hoverSampleBox, hoverSampleMain, hoverSampleSub, color);
     });
 
-    canvas.addEventListener("pointerdown", function (event) {
-      const color = getCanvasColorFromEvent(event);
-
-      if (color === null) {
-        return;
-      }
-
-      if (event.pointerType === "touch" && isPhoneLayout()) {
-        event.preventDefault();
-
-        isTouchDragging = true;
-        touchDragColor = color;
-        canvas.setPointerCapture(event.pointerId);
-
-        updateSample(hoverSampleBox, hoverSampleMain, hoverSampleSub, color);
-        positionTouchBubble(event, color);
-        return;
-      }
-
-      pickedColor = color;
-      updateSample(pickedSampleBox, pickedSampleMain, pickedSampleSub, pickedColor);
-    });
-
     canvas.addEventListener("pointerup", function (event) {
       if (event.pointerType === "touch" && isPhoneLayout()) {
         event.preventDefault();
@@ -2048,7 +2123,7 @@
         if (touchDragColor !== null) {
           pickedColor = [touchDragColor[0], touchDragColor[1], touchDragColor[2]];
           updateSample(pickedSampleBox, pickedSampleMain, pickedSampleSub, pickedColor);
-          positionTouchBubble(event, pickedColor);
+          positionTouchBubble(event.clientX, event.clientY, pickedColor);
         }
 
         isTouchDragging = false;
@@ -2144,24 +2219,25 @@
       hideTouchBubble();
     });
 
-    document.querySelectorAll(".step-button").forEach(function (button) {
-      button.addEventListener("click", function () {
-        const target = document.getElementById(button.dataset.target);
+    document.querySelectorAll(".step-button, .slider-step-button").forEach(function (button) {
+      button.addEventListener("pointerdown", function (event) {
+        event.preventDefault();
+
+        const targetId = button.dataset.target;
         const step = Number(button.dataset.step);
-        const min = Number(target.min);
-        const max = Number(target.max);
-        const current = Number(target.value);
-        const next = clamp(current + step, min, max);
 
-        target.value = next;
-        target.dispatchEvent(new Event("input", { bubbles: true }));
+        changeNumberValue(targetId, step);
 
-        if (target.id === "valueNumber") {
-          updateValue(target.value);
-        }
-
-        hideTouchBubble();
+        repeatTimer = setTimeout(function () {
+          repeatInterval = setInterval(function () {
+            changeNumberValue(targetId, step);
+          }, 80);
+        }, 420);
       });
+
+      button.addEventListener("pointerup", stopRepeat);
+      button.addEventListener("pointerleave", stopRepeat);
+      button.addEventListener("pointercancel", stopRepeat);
     });
 
     document.getElementById("saveButton").addEventListener("click", async function () {
