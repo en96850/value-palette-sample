@@ -261,6 +261,7 @@
       background: rgba(255, 250, 242, 0.72);
       border: 1px solid var(--line);
       box-shadow: 0 18px 50px var(--shadow);
+      overflow: visible;
     }
 
     .display-switch {
@@ -322,59 +323,104 @@
     .touch-bubble {
       display: none;
       position: absolute;
-      z-index: 8;
-      width: 180px;
-      padding: 8px;
-      border-radius: 16px;
-      background: rgba(255, 250, 242, 0.97);
+      z-index: 20;
+      width: 250px;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(255, 250, 242, 0.98);
       border: 1px solid var(--line);
-      box-shadow: 0 14px 34px rgba(44, 36, 28, 0.24);
-      gap: 7px;
-      align-items: center;
+      box-shadow: 0 16px 38px rgba(44, 36, 28, 0.28);
       pointer-events: auto;
     }
 
     .touch-bubble.visible {
+      display: block;
+    }
+
+    .touch-bubble::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -17px;
+      width: 28px;
+      height: 28px;
+      background: rgba(255, 250, 242, 0.98);
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      transform: translateX(-50%) rotate(45deg);
+      border-bottom-right-radius: 4px;
+    }
+
+    .touch-bubble-head {
       display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .touch-bubble-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .touch-bubble-badge {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 0.08em;
     }
 
     .touch-bubble-color {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
+      width: 100%;
+      height: 60px;
+      border-radius: 12px;
       border: 1px solid rgba(44, 36, 28, 0.18);
-      flex: 0 0 auto;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 8px;
     }
 
-    .touch-bubble-text {
-      flex: 1;
-      min-width: 0;
-      line-height: 1.2;
+    .touch-bubble-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
       font-family: "Consolas", "Menlo", monospace;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 9px;
     }
 
     .touch-bubble-main {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--text);
-      font-weight: 700;
-      white-space: nowrap;
+      font-weight: 800;
     }
 
     .touch-bubble-sub {
-      font-size: 10px;
+      font-size: 11px;
       color: var(--muted);
     }
 
     .touch-add-button {
+      position: relative;
+      z-index: 1;
+      width: 100%;
       border: none;
       border-radius: 999px;
       background: var(--dark);
       color: #fffaf2;
-      padding: 7px 9px;
-      font-size: 11px;
-      font-weight: 700;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 800;
       cursor: pointer;
-      white-space: nowrap;
+    }
+
+    .touch-add-button:active {
+      background: var(--accent);
     }
 
     .center-readout {
@@ -831,11 +877,6 @@
         font-size: 10px;
       }
 
-      .touch-bubble {
-        width: 176px;
-        padding: 7px;
-      }
-
       .center-readout {
         width: 100%;
         justify-content: center;
@@ -1211,12 +1252,16 @@
           <canvas id="canvas" width="540" height="540"></canvas>
 
           <div id="touchBubble" class="touch-bubble">
-            <div id="touchBubbleColor" class="touch-bubble-color"></div>
-            <div class="touch-bubble-text">
-              <div id="touchBubbleMain" class="touch-bubble-main">#------</div>
-              <div id="touchBubbleSub" class="touch-bubble-sub">VALUE -</div>
+            <div class="touch-bubble-head">
+              <span id="touchBubbleTitle" class="touch-bubble-title">タップしている色</span>
+              <span id="touchBubbleBadge" class="touch-bubble-badge">LIVE</span>
             </div>
-            <button id="touchAddButton" class="touch-add-button">追加</button>
+            <div id="touchBubbleColor" class="touch-bubble-color"></div>
+            <div class="touch-bubble-info">
+              <span id="touchBubbleMain" class="touch-bubble-main">RGB(-, -, -)</span>
+              <span id="touchBubbleSub" class="touch-bubble-sub">HEX #------ / VALUE -</span>
+            </div>
+            <button id="touchAddButton" class="touch-add-button">パレットに追加</button>
           </div>
         </div>
 
@@ -1393,6 +1438,8 @@
     const displayButtons = document.querySelectorAll(".display-button");
 
     const touchBubble = document.getElementById("touchBubble");
+    const touchBubbleTitle = document.getElementById("touchBubbleTitle");
+    const touchBubbleBadge = document.getElementById("touchBubbleBadge");
     const touchBubbleColor = document.getElementById("touchBubbleColor");
     const touchBubbleMain = document.getElementById("touchBubbleMain");
     const touchBubbleSub = document.getElementById("touchBubbleSub");
@@ -1440,8 +1487,10 @@
     let pickedColor = null;
     let savedPalette = [];
     let displayMode = "wheel";
-    let isTouchDragging = false;
     let touchDragColor = null;
+    let lastTouchX = 0;
+    let lastTouchY = 0;
+    let activeTouchId = null;
     let repeatTimer = null;
     let repeatInterval = null;
 
@@ -1801,16 +1850,16 @@
       return getCanvasColorFromPoint(event.clientX, event.clientY);
     }
 
-    function positionTouchBubble(clientX, clientY, color) {
+    function showTouchBubble(clientX, clientY, color, isFixed) {
       const wrapRect = wheelWrap.getBoundingClientRect();
-      let x = clientX - wrapRect.left + 10;
-      let y = clientY - wrapRect.top - 60;
+      let x = clientX - wrapRect.left - 125;
+      let y = clientY - wrapRect.top - 132;
 
-      const bubbleWidth = 180;
-      const bubbleHeight = 54;
+      const bubbleWidth = 250;
+      const bubbleHeight = 150;
 
-      x = Math.max(6, Math.min(x, wrapRect.width - bubbleWidth - 6));
-      y = Math.max(6, Math.min(y, wrapRect.height - bubbleHeight - 6));
+      x = Math.max(8, Math.min(x, wrapRect.width - bubbleWidth - 8));
+      y = Math.max(8, Math.min(y, wrapRect.height - bubbleHeight - 22));
 
       touchBubble.style.left = x + "px";
       touchBubble.style.top = y + "px";
@@ -1820,14 +1869,32 @@
       const b = color[2];
       const value = getValue(r, g, b);
 
+      touchBubbleTitle.textContent = isFixed ? "タップした色" : "タップしている色";
+      touchBubbleBadge.textContent = isFixed ? "PICK" : "LIVE";
       touchBubbleColor.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
-      touchBubbleMain.textContent = rgbToHex(r, g, b);
-      touchBubbleSub.textContent = `VALUE ${value}`;
+      touchBubbleMain.textContent = `RGB(${r}, ${g}, ${b})`;
+      touchBubbleSub.textContent = `${rgbToHex(r, g, b)} / VALUE ${value}`;
+
       touchBubble.classList.add("visible");
     }
 
     function hideTouchBubble() {
       touchBubble.classList.remove("visible");
+    }
+
+    function handleTouchAt(clientX, clientY, isFixed) {
+      const color = getCanvasColorFromPoint(clientX, clientY);
+
+      if (color === null) {
+        return;
+      }
+
+      lastTouchX = clientX;
+      lastTouchY = clientY;
+      touchDragColor = color;
+
+      updateSample(hoverSampleBox, hoverSampleMain, hoverSampleSub, color);
+      showTouchBubble(clientX, clientY, color, isFixed);
     }
 
     function renderPalette() {
@@ -1853,6 +1920,7 @@
 
     function addPickedColorToPalette() {
       if (pickedColor === null) return;
+
       savedPalette.push([pickedColor[0], pickedColor[1], pickedColor[2]]);
       renderPalette();
     }
@@ -2096,42 +2164,10 @@
       });
     });
 
-    canvas.addEventListener("pointerdown", function (event) {
+    canvas.addEventListener("mousemove", function (event) {
+      if (isPhoneLayout()) return;
+
       const color = getCanvasColorFromEvent(event);
-
-      if (color === null) return;
-
-      if (event.pointerType === "touch" && isPhoneLayout()) {
-        event.preventDefault();
-
-        isTouchDragging = true;
-        touchDragColor = color;
-        canvas.setPointerCapture(event.pointerId);
-
-        updateSample(hoverSampleBox, hoverSampleMain, hoverSampleSub, color);
-        positionTouchBubble(event.clientX, event.clientY, color);
-        return;
-      }
-
-      pickedColor = color;
-      updateSample(pickedSampleBox, pickedSampleMain, pickedSampleSub, pickedColor);
-    });
-
-    canvas.addEventListener("pointermove", function (event) {
-      const color = getCanvasColorFromEvent(event);
-
-      if (event.pointerType === "touch") {
-        if (!isPhoneLayout() || !isTouchDragging) return;
-
-        event.preventDefault();
-
-        if (color === null) return;
-
-        touchDragColor = color;
-        updateSample(hoverSampleBox, hoverSampleMain, hoverSampleSub, color);
-        positionTouchBubble(event.clientX, event.clientY, color);
-        return;
-      }
 
       if (color === null) {
         resetHoverSample();
@@ -2141,39 +2177,71 @@
       updateSample(hoverSampleBox, hoverSampleMain, hoverSampleSub, color);
     });
 
-    canvas.addEventListener("pointerup", function (event) {
-      if (event.pointerType === "touch" && isPhoneLayout()) {
-        event.preventDefault();
+    canvas.addEventListener("mouseleave", function () {
+      if (isPhoneLayout()) return;
+      resetHoverSample();
+    });
 
-        if (touchDragColor !== null) {
-          pickedColor = [touchDragColor[0], touchDragColor[1], touchDragColor[2]];
-          updateSample(pickedSampleBox, pickedSampleMain, pickedSampleSub, pickedColor);
-          positionTouchBubble(event.clientX, event.clientY, pickedColor);
+    canvas.addEventListener("click", function (event) {
+      if (isPhoneLayout()) return;
+
+      const color = getCanvasColorFromEvent(event);
+
+      if (color === null) return;
+
+      pickedColor = color;
+      updateSample(pickedSampleBox, pickedSampleMain, pickedSampleSub, pickedColor);
+    });
+
+    canvas.addEventListener("touchstart", function (event) {
+      if (!isPhoneLayout()) return;
+
+      event.preventDefault();
+
+      const touch = event.changedTouches[0];
+      activeTouchId = touch.identifier;
+
+      handleTouchAt(touch.clientX, touch.clientY, false);
+    }, { passive: false });
+
+    canvas.addEventListener("touchmove", function (event) {
+      if (!isPhoneLayout()) return;
+
+      event.preventDefault();
+
+      let touch = event.changedTouches[0];
+
+      for (let i = 0; i < event.changedTouches.length; i++) {
+        if (event.changedTouches[i].identifier === activeTouchId) {
+          touch = event.changedTouches[i];
+          break;
         }
-
-        isTouchDragging = false;
-
-        try {
-          canvas.releasePointerCapture(event.pointerId);
-        } catch (error) {}
-
-        return;
       }
-    });
 
-    canvas.addEventListener("pointercancel", function () {
-      isTouchDragging = false;
-    });
+      handleTouchAt(touch.clientX, touch.clientY, false);
+    }, { passive: false });
 
-    canvas.addEventListener("pointerleave", function (event) {
-      if (event.pointerType !== "touch") {
-        resetHoverSample();
+    canvas.addEventListener("touchend", function (event) {
+      if (!isPhoneLayout()) return;
+
+      event.preventDefault();
+
+      if (touchDragColor !== null) {
+        pickedColor = [touchDragColor[0], touchDragColor[1], touchDragColor[2]];
+        updateSample(pickedSampleBox, pickedSampleMain, pickedSampleSub, pickedColor);
+        showTouchBubble(lastTouchX, lastTouchY, pickedColor, true);
       }
-    });
 
-    touchAddButton.addEventListener("pointerdown", function (event) {
+      activeTouchId = null;
+    }, { passive: false });
+
+    canvas.addEventListener("touchcancel", function () {
+      activeTouchId = null;
+    }, { passive: false });
+
+    touchAddButton.addEventListener("touchstart", function (event) {
       event.stopPropagation();
-    });
+    }, { passive: false });
 
     touchAddButton.addEventListener("click", function (event) {
       event.stopPropagation();
