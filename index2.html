@@ -334,8 +334,8 @@
       display: none;
       position: fixed;
       z-index: 19;
-      width: 26px;
-      height: 26px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       border: 3px solid #fffaf2;
       background: rgba(47, 36, 25, 0.55);
@@ -354,14 +354,15 @@
       display: none;
       position: fixed;
       z-index: 20;
-      width: 250px;
-      padding: 12px;
-      border-radius: 18px;
+      width: 214px;
+      padding: 10px;
+      border-radius: 16px;
       background: rgba(255, 250, 242, 0.98);
       border: 1px solid var(--line);
       box-shadow: 0 16px 38px rgba(44, 36, 28, 0.28);
       pointer-events: auto;
       --tail-left: 50%;
+      --tail-top: 50%;
     }
 
     .touch-bubble.visible {
@@ -371,15 +372,43 @@
     .touch-bubble::after {
       content: "";
       position: absolute;
-      left: var(--tail-left);
-      bottom: -17px;
-      width: 28px;
-      height: 28px;
+      width: 22px;
+      height: 22px;
       background: rgba(255, 250, 242, 0.98);
+      transform: rotate(45deg);
+      border-bottom-right-radius: 4px;
+    }
+
+    .touch-bubble.tail-down::after {
+      left: var(--tail-left);
+      bottom: -12px;
       border-right: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
       transform: translateX(-50%) rotate(45deg);
-      border-bottom-right-radius: 4px;
+    }
+
+    .touch-bubble.tail-up::after {
+      left: var(--tail-left);
+      top: -12px;
+      border-left: 1px solid var(--line);
+      border-top: 1px solid var(--line);
+      transform: translateX(-50%) rotate(45deg);
+    }
+
+    .touch-bubble.tail-left::after {
+      left: -12px;
+      top: var(--tail-top);
+      border-left: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      transform: translateY(-50%) rotate(45deg);
+    }
+
+    .touch-bubble.tail-right::after {
+      right: -12px;
+      top: var(--tail-top);
+      border-right: 1px solid var(--line);
+      border-top: 1px solid var(--line);
+      transform: translateY(-50%) rotate(45deg);
     }
 
     .touch-bubble-head {
@@ -387,19 +416,19 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      margin-bottom: 8px;
+      margin-bottom: 7px;
       position: relative;
       z-index: 1;
     }
 
     .touch-bubble-title {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 800;
       color: var(--text);
     }
 
     .touch-bubble-badge {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 800;
       color: var(--accent);
       letter-spacing: 0.08em;
@@ -407,12 +436,12 @@
 
     .touch-bubble-color {
       width: 100%;
-      height: 60px;
-      border-radius: 12px;
+      height: 46px;
+      border-radius: 11px;
       border: 1px solid rgba(44, 36, 28, 0.18);
       position: relative;
       z-index: 1;
-      margin-bottom: 8px;
+      margin-bottom: 7px;
     }
 
     .touch-bubble-info {
@@ -422,17 +451,17 @@
       font-family: "Consolas", "Menlo", monospace;
       position: relative;
       z-index: 1;
-      margin-bottom: 9px;
+      margin-bottom: 8px;
     }
 
     .touch-bubble-main {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text);
       font-weight: 800;
     }
 
     .touch-bubble-sub {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--muted);
     }
 
@@ -444,8 +473,8 @@
       border-radius: 999px;
       background: var(--dark);
       color: #fffaf2;
-      padding: 10px 12px;
-      font-size: 13px;
+      padding: 9px 10px;
+      font-size: 12px;
       font-weight: 800;
       cursor: pointer;
       touch-action: manipulation;
@@ -1566,9 +1595,9 @@
 
     function setCanvasSizeForLayout() {
       if (isPhoneLayout()) {
-        if (canvas.width !== 540 || canvas.height !== 620) {
+        if (canvas.width !== 540 || canvas.height !== 680) {
           canvas.width = 540;
-          canvas.height = 620;
+          canvas.height = 680;
         }
       } else {
         if (canvas.width !== 540 || canvas.height !== 540) {
@@ -1777,7 +1806,7 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const centerX = canvas.width / 2;
-      const centerY = isPhoneLayout() ? 352 : canvas.height / 2;
+      const centerY = isPhoneLayout() ? 420 : canvas.height / 2;
       const radius = isPhoneLayout() ? 260 : 220;
       const grayBase = [targetValue, targetValue, targetValue];
       const anchors = createAnchors(targetValue);
@@ -1823,7 +1852,7 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const left = isPhoneLayout() ? 4 : 34;
-      const top = isPhoneLayout() ? 92 : 58;
+      const top = isPhoneLayout() ? 148 : 58;
       const width = isPhoneLayout() ? 532 : 472;
       const height = isPhoneLayout() ? 520 : 424;
       const grayBase = [targetValue, targetValue, targetValue];
@@ -1943,35 +1972,71 @@
     }
 
     function showTouchBubble(clientX, clientY, color, isFixed) {
-      const bubbleWidth = 250;
-      const bubbleHeight = 150;
+      const bubbleWidth = 214;
+      const bubbleHeight = 126;
       const margin = 8;
-      const tailGap = 34;
+      const gap = 30;
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      let placement = "above";
+
+      if (clientY - bubbleHeight - gap < margin) {
+        placement = "below";
+      } else if (clientX + bubbleWidth + gap < viewportWidth && clientX < bubbleWidth / 2 + margin) {
+        placement = "right";
+      } else if (clientX - bubbleWidth - gap > margin && clientX > viewportWidth - bubbleWidth / 2 - margin) {
+        placement = "left";
+      }
 
       let left = clientX - bubbleWidth / 2;
-      let top = clientY - bubbleHeight - tailGap;
+      let top = clientY - bubbleHeight - gap;
 
-      if (left < margin) {
-        left = margin;
+      if (placement === "below") {
+        left = clientX - bubbleWidth / 2;
+        top = clientY + gap;
       }
 
-      if (left + bubbleWidth > window.innerWidth - margin) {
-        left = window.innerWidth - bubbleWidth - margin;
+      if (placement === "right") {
+        left = clientX + gap;
+        top = clientY - bubbleHeight / 2;
       }
 
-      if (top < margin) {
-        top = margin;
+      if (placement === "left") {
+        left = clientX - bubbleWidth - gap;
+        top = clientY - bubbleHeight / 2;
       }
 
-      if (top + bubbleHeight > window.innerHeight - margin) {
-        top = window.innerHeight - bubbleHeight - margin;
+      left = Math.max(margin, Math.min(left, viewportWidth - bubbleWidth - margin));
+      top = Math.max(margin, Math.min(top, viewportHeight - bubbleHeight - margin));
+
+      const tailLeft = Math.max(22, Math.min(clientX - left, bubbleWidth - 22));
+      const tailTop = Math.max(22, Math.min(clientY - top, bubbleHeight - 22));
+
+      touchBubble.classList.remove("tail-up", "tail-down", "tail-left", "tail-right");
+
+      if (placement === "above") {
+        touchBubble.classList.add("tail-down");
+        touchBubble.style.setProperty("--tail-left", tailLeft + "px");
       }
 
-      const tailLeft = Math.max(24, Math.min(clientX - left, bubbleWidth - 24));
+      if (placement === "below") {
+        touchBubble.classList.add("tail-up");
+        touchBubble.style.setProperty("--tail-left", tailLeft + "px");
+      }
+
+      if (placement === "right") {
+        touchBubble.classList.add("tail-left");
+        touchBubble.style.setProperty("--tail-top", tailTop + "px");
+      }
+
+      if (placement === "left") {
+        touchBubble.classList.add("tail-right");
+        touchBubble.style.setProperty("--tail-top", tailTop + "px");
+      }
 
       touchBubble.style.left = left + "px";
       touchBubble.style.top = top + "px";
-      touchBubble.style.setProperty("--tail-left", tailLeft + "px");
 
       const r = color[0];
       const g = color[1];
