@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Value Palette</title>
   <style>
     :root {
@@ -506,6 +507,9 @@
 
     .number-control {
       width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .mobile-stepper,
@@ -589,6 +593,13 @@
       font-weight: 700;
       color: var(--muted);
       white-space: nowrap;
+    }
+
+    .slider-control-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
     }
 
     input[type="range"] {
@@ -785,7 +796,7 @@
       }
 
       .wheel-stack {
-        gap: 9px;
+        gap: 10px;
       }
 
       .wheel-wrap {
@@ -801,23 +812,23 @@
       }
 
       .display-switch {
-        top: 6px;
-        right: 6px;
-        padding: 4px;
-        gap: 4px;
+        top: 10px;
+        right: 10px;
+        padding: 6px;
+        gap: 6px;
       }
 
       .display-button {
-        min-width: 52px;
-        padding: 4px 7px 5px;
+        min-width: 92px;
+        padding: 9px 12px 10px;
       }
 
       .display-button .jp {
-        font-size: 10px;
+        font-size: 15px;
       }
 
       .display-button .en {
-        font-size: 7px;
+        font-size: 10px;
       }
 
       .touch-bubble {
@@ -828,41 +839,41 @@
       .center-readout {
         width: 100%;
         justify-content: center;
-        gap: 9px;
+        gap: 10px;
       }
 
       .value-badge {
-        padding: 8px 13px;
-        gap: 9px;
+        padding: 10px 16px;
+        gap: 10px;
       }
 
       .value-badge-label {
-        font-size: 10px;
+        font-size: 11px;
       }
 
       .value-badge-num {
-        font-size: 23px;
-        min-width: 44px;
+        font-size: 28px;
+        min-width: 50px;
       }
 
       .gray-preview-box {
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
         border-radius: 12px;
       }
 
       .control-panel {
-        padding: 13px;
+        padding: 14px;
       }
 
       .panel-title {
-        font-size: 14px;
-        margin-bottom: 7px;
+        font-size: 18px;
+        margin-bottom: 8px;
       }
 
       .panel-note {
-        font-size: 12px;
-        margin-bottom: 11px;
+        font-size: 13px;
+        margin-bottom: 12px;
         line-height: 1.5;
       }
 
@@ -871,44 +882,46 @@
       }
 
       .tab-button {
-        padding: 9px 8px;
-        font-size: 13px;
+        padding: 13px 8px;
+        font-size: 17px;
       }
 
       .input-preview-layout {
-        grid-template-columns: 1fr 82px;
-        gap: 10px;
+        grid-template-columns: minmax(0, 1fr) 160px;
+        gap: 12px;
         align-items: stretch;
       }
 
       .field-column {
-        gap: 8px;
+        gap: 12px;
       }
 
       .field-line {
-        grid-template-columns: 22px 1fr;
-        gap: 6px;
+        grid-template-columns: 24px 1fr;
+        gap: 8px;
+        font-size: 18px;
       }
 
       .number-control {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 36px;
-        gap: 5px;
-        align-items: stretch;
+        grid-template-columns: minmax(0, 1fr) 92px;
+        gap: 8px;
+        align-items: center;
       }
 
       .mobile-stepper {
         display: grid;
-        grid-template-rows: 1fr 1fr;
-        gap: 3px;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
       }
 
       .step-button {
+        height: 50px;
         border: 1px solid var(--line);
-        border-radius: 9px;
+        border-radius: 12px;
         background: #fffaf2;
         color: var(--muted);
-        font-size: 10px;
+        font-size: 22px;
         font-weight: 700;
         line-height: 1;
         padding: 0;
@@ -922,38 +935,45 @@
 
       input[type="number"],
       input[type="text"] {
-        padding: 9px 8px;
-        font-size: 14px;
+        padding: 12px 12px;
+        font-size: 22px;
+        border-radius: 14px;
       }
 
       .preview {
-        height: auto;
-        min-height: 100%;
+        height: 178px;
+        min-height: 178px;
       }
 
       .button-row {
-        margin-top: 11px;
+        margin-top: 12px;
       }
 
       .main-button {
         width: 100%;
+        font-size: 16px;
+        padding: 14px 16px;
       }
 
       .slider-panel,
       .number-panel {
-        padding: 12px;
+        padding: 14px;
       }
 
       .slider-track-row {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 9px;
+        gap: 10px;
+      }
+
+      .slider-label {
+        font-size: 16px;
       }
 
       .slider-control-row {
         display: grid;
-        grid-template-columns: 38px 1fr 38px;
-        gap: 8px;
+        grid-template-columns: 56px 1fr 56px;
+        gap: 10px;
         align-items: center;
       }
 
@@ -961,12 +981,12 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 38px;
+        height: 56px;
         border: 1px solid var(--line);
-        border-radius: 12px;
+        border-radius: 14px;
         background: #fffaf2;
         color: var(--muted);
-        font-size: 18px;
+        font-size: 28px;
         font-weight: 700;
         cursor: pointer;
       }
@@ -979,22 +999,23 @@
       input[type="range"] {
         min-width: 0;
         width: 100%;
-        height: 18px;
+        height: 22px;
       }
 
       input[type="range"]::-webkit-slider-thumb {
-        width: 34px;
-        height: 34px;
+        width: 42px;
+        height: 42px;
       }
 
       input[type="range"]::-moz-range-thumb {
-        width: 34px;
-        height: 34px;
+        width: 42px;
+        height: 42px;
       }
 
       .bottom-actions {
-        flex-direction: column;
-        align-items: stretch;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: start;
         gap: 10px;
       }
 
@@ -1004,38 +1025,34 @@
       }
 
       .number-row {
-        gap: 12px;
+        gap: 14px;
       }
 
       .number-label {
         white-space: normal;
+        font-size: 16px;
       }
 
       .value-number-control {
-        width: 142px;
+        width: 176px;
       }
 
       .save-area {
-        justify-content: space-between;
+        justify-content: flex-end;
         align-items: center;
-        gap: 10px;
-        width: 100%;
+        gap: 12px;
+        width: auto;
       }
 
       .save-options {
         left: 0;
         margin-right: 0;
-        font-size: 12px;
+        font-size: 14px;
       }
 
       #saveButton {
-        padding: 11px 16px;
-      }
-
-      .side-stack {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
+        padding: 14px 18px;
+        font-size: 16px;
       }
 
       .hover-panel,
@@ -1043,18 +1060,28 @@
         display: none;
       }
 
+      .side-stack {
+        display: block;
+        order: 3;
+      }
+
       .palette-panel {
         min-height: 190px;
-        padding: 13px;
+        padding: 14px;
+      }
+
+      .palette-title {
+        font-size: 18px;
+      }
+
+      .palette-desc,
+      .palette-empty,
+      .palette-count {
+        font-size: 14px;
       }
 
       .palette-grid {
         grid-template-columns: repeat(5, 1fr);
-      }
-
-      .sample-head,
-      .palette-head {
-        align-items: flex-start;
       }
     }
 
@@ -1076,18 +1103,28 @@
         border-radius: 16px;
       }
 
+      .display-button {
+        min-width: 82px;
+        padding: 8px 10px 9px;
+      }
+
+      .display-button .jp {
+        font-size: 14px;
+      }
+
       .input-preview-layout {
-        grid-template-columns: 1fr 74px;
-        gap: 8px;
+        grid-template-columns: minmax(0, 1fr) 138px;
+        gap: 10px;
       }
 
       .number-control {
-        grid-template-columns: minmax(0, 1fr) 34px;
+        grid-template-columns: minmax(0, 1fr) 84px;
       }
 
       .save-area {
         flex-direction: column;
         align-items: stretch;
+        gap: 10px;
       }
 
       .save-options {
@@ -1211,28 +1248,30 @@
                   <div class="number-control">
                     <input id="rInput" type="number" min="0" max="255" value="87">
                     <div class="mobile-stepper">
-                      <button class="step-button" data-target="rInput" data-step="1">▲</button>
-                      <button class="step-button" data-target="rInput" data-step="-1">▼</button>
+                      <button class="step-button" data-target="rInput" data-step="-1">−</button>
+                      <button class="step-button" data-target="rInput" data-step="1">＋</button>
                     </div>
                   </div>
                 </div>
+
                 <div class="field-line">
                   <span>G</span>
                   <div class="number-control">
                     <input id="gInput" type="number" min="0" max="255" value="109">
                     <div class="mobile-stepper">
-                      <button class="step-button" data-target="gInput" data-step="1">▲</button>
-                      <button class="step-button" data-target="gInput" data-step="-1">▼</button>
+                      <button class="step-button" data-target="gInput" data-step="-1">−</button>
+                      <button class="step-button" data-target="gInput" data-step="1">＋</button>
                     </div>
                   </div>
                 </div>
+
                 <div class="field-line">
                   <span>B</span>
                   <div class="number-control">
                     <input id="bInput" type="number" min="0" max="255" value="181">
                     <div class="mobile-stepper">
-                      <button class="step-button" data-target="bInput" data-step="1">▲</button>
-                      <button class="step-button" data-target="bInput" data-step="-1">▼</button>
+                      <button class="step-button" data-target="bInput" data-step="-1">−</button>
+                      <button class="step-button" data-target="bInput" data-step="1">＋</button>
                     </div>
                   </div>
                 </div>
@@ -1254,28 +1293,30 @@
                   <div class="number-control">
                     <input id="hInput" type="number" min="0" max="360" value="226">
                     <div class="mobile-stepper">
-                      <button class="step-button" data-target="hInput" data-step="1">▲</button>
-                      <button class="step-button" data-target="hInput" data-step="-1">▼</button>
+                      <button class="step-button" data-target="hInput" data-step="-1">−</button>
+                      <button class="step-button" data-target="hInput" data-step="1">＋</button>
                     </div>
                   </div>
                 </div>
+
                 <div class="field-line">
                   <span>S</span>
                   <div class="number-control">
                     <input id="sInput" type="number" min="0" max="100" value="52">
                     <div class="mobile-stepper">
-                      <button class="step-button" data-target="sInput" data-step="1">▲</button>
-                      <button class="step-button" data-target="sInput" data-step="-1">▼</button>
+                      <button class="step-button" data-target="sInput" data-step="-1">−</button>
+                      <button class="step-button" data-target="sInput" data-step="1">＋</button>
                     </div>
                   </div>
                 </div>
+
                 <div class="field-line">
                   <span>V</span>
                   <div class="number-control">
                     <input id="vInput" type="number" min="0" max="100" value="71">
                     <div class="mobile-stepper">
-                      <button class="step-button" data-target="vInput" data-step="1">▲</button>
-                      <button class="step-button" data-target="vInput" data-step="-1">▼</button>
+                      <button class="step-button" data-target="vInput" data-step="-1">−</button>
+                      <button class="step-button" data-target="vInput" data-step="1">＋</button>
                     </div>
                   </div>
                 </div>
@@ -1325,8 +1366,8 @@
               <div class="number-control value-number-control">
                 <input id="valueNumber" type="number" min="0" max="255" value="111">
                 <div class="mobile-stepper">
-                  <button class="step-button" data-target="valueNumber" data-step="1">▲</button>
-                  <button class="step-button" data-target="valueNumber" data-step="-1">▼</button>
+                  <button class="step-button" data-target="valueNumber" data-step="-1">−</button>
+                  <button class="step-button" data-target="valueNumber" data-step="1">＋</button>
                 </div>
               </div>
             </div>
@@ -1606,7 +1647,7 @@
 
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
-      const radius = isPhoneLayout() ? 266 : 220;
+      const radius = isPhoneLayout() ? 268 : 220;
       const grayBase = [targetValue, targetValue, targetValue];
       const anchors = createAnchors(targetValue);
 
@@ -1650,10 +1691,10 @@
     function drawStrip(targetValue) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      const left = isPhoneLayout() ? 6 : 34;
-      const top = isPhoneLayout() ? 46 : 58;
-      const width = isPhoneLayout() ? 528 : 472;
-      const height = isPhoneLayout() ? 486 : 424;
+      const left = isPhoneLayout() ? 4 : 34;
+      const top = isPhoneLayout() ? 40 : 58;
+      const width = isPhoneLayout() ? 532 : 472;
+      const height = isPhoneLayout() ? 494 : 424;
       const grayBase = [targetValue, targetValue, targetValue];
       const anchors = createAnchors(targetValue);
 
@@ -1697,14 +1738,8 @@
     function getActiveTabType() {
       const activeButton = document.querySelector(".tab-button.active");
 
-      if (activeButton.dataset.tab === "hsvPanel") {
-        return "hsv";
-      }
-
-      if (activeButton.dataset.tab === "hexPanel") {
-        return "hex";
-      }
-
+      if (activeButton.dataset.tab === "hsvPanel") return "hsv";
+      if (activeButton.dataset.tab === "hexPanel") return "hex";
       return "rgb";
     }
 
@@ -1817,10 +1852,7 @@
     }
 
     function addPickedColorToPalette() {
-      if (pickedColor === null) {
-        return;
-      }
-
+      if (pickedColor === null) return;
       savedPalette.push([pickedColor[0], pickedColor[1], pickedColor[2]]);
       renderPalette();
     }
@@ -1985,7 +2017,6 @@
       vInput.value = v;
 
       const rgb = hsvPercentToRgb(h, s, v);
-
       hsvPreview.style.backgroundColor = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
     }
 
@@ -2068,9 +2099,7 @@
     canvas.addEventListener("pointerdown", function (event) {
       const color = getCanvasColorFromEvent(event);
 
-      if (color === null) {
-        return;
-      }
+      if (color === null) return;
 
       if (event.pointerType === "touch" && isPhoneLayout()) {
         event.preventDefault();
@@ -2092,15 +2121,11 @@
       const color = getCanvasColorFromEvent(event);
 
       if (event.pointerType === "touch") {
-        if (!isPhoneLayout() || !isTouchDragging) {
-          return;
-        }
+        if (!isPhoneLayout() || !isTouchDragging) return;
 
         event.preventDefault();
 
-        if (color === null) {
-          return;
-        }
+        if (color === null) return;
 
         touchDragColor = color;
         updateSample(hoverSampleBox, hoverSampleMain, hoverSampleSub, color);
@@ -2244,9 +2269,7 @@
       const saveDisplay = saveDisplayCheck.checked;
       const savePalette = savePaletteCheck.checked;
 
-      if (!saveDisplay && !savePalette) {
-        return;
-      }
+      if (!saveDisplay && !savePalette) return;
 
       if (saveDisplay && savePalette) {
         await saveCanvasAsPng(createCombinedCanvas(), "value-display-and-palette.png");
