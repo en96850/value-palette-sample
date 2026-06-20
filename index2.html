@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
   <title>Value Palette</title>
   <style>
     :root {
@@ -20,6 +20,13 @@
 
     * {
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      overscroll-behavior: none;
+      touch-action: manipulation;
     }
 
     body {
@@ -181,6 +188,7 @@
       font-size: 12px;
       font-weight: 700;
       cursor: pointer;
+      touch-action: manipulation;
     }
 
     .small-button:hover {
@@ -197,6 +205,7 @@
       font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
+      touch-action: manipulation;
     }
 
     .reset-button:hover {
@@ -292,6 +301,7 @@
       align-items: center;
       gap: 1px;
       line-height: 1.15;
+      touch-action: manipulation;
     }
 
     .display-button .jp {
@@ -320,9 +330,29 @@
       touch-action: none;
     }
 
+    .touch-point {
+      display: none;
+      position: fixed;
+      z-index: 19;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 3px solid #fffaf2;
+      background: rgba(47, 36, 25, 0.55);
+      box-shadow:
+        0 0 0 2px rgba(47, 36, 25, 0.75),
+        0 8px 18px rgba(44, 36, 28, 0.28);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+    }
+
+    .touch-point.visible {
+      display: block;
+    }
+
     .touch-bubble {
       display: none;
-      position: absolute;
+      position: fixed;
       z-index: 20;
       width: 250px;
       padding: 12px;
@@ -331,6 +361,7 @@
       border: 1px solid var(--line);
       box-shadow: 0 16px 38px rgba(44, 36, 28, 0.28);
       pointer-events: auto;
+      --tail-left: 50%;
     }
 
     .touch-bubble.visible {
@@ -340,7 +371,7 @@
     .touch-bubble::after {
       content: "";
       position: absolute;
-      left: 50%;
+      left: var(--tail-left);
       bottom: -17px;
       width: 28px;
       height: 28px;
@@ -417,6 +448,7 @@
       font-size: 13px;
       font-weight: 800;
       cursor: pointer;
+      touch-action: manipulation;
     }
 
     .touch-add-button:active {
@@ -507,6 +539,7 @@
       font-size: 14px;
       font-weight: 700;
       cursor: pointer;
+      touch-action: manipulation;
     }
 
     .tab-button.active {
@@ -591,6 +624,8 @@
 
     button {
       font-family: inherit;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     .main-button,
@@ -603,6 +638,7 @@
       font-size: 13px;
       font-weight: 700;
       cursor: pointer;
+      touch-action: manipulation;
     }
 
     .main-button:hover,
@@ -658,6 +694,7 @@
       border: 1px solid #b8aa98;
       background: linear-gradient(to right, #151515 0%, #777777 50%, #ffffff 100%);
       cursor: pointer;
+      touch-action: manipulation;
     }
 
     input[type="range"]::-webkit-slider-thumb {
@@ -819,7 +856,7 @@
       }
 
       .hero {
-        margin: 0 4px 8px;
+        margin: 0 10px 18px;
       }
 
       .eyebrow {
@@ -850,6 +887,7 @@
         max-width: none;
         padding: 2px;
         border-radius: 18px;
+        aspect-ratio: auto;
       }
 
       canvas {
@@ -903,6 +941,12 @@
         border-radius: 12px;
       }
 
+      .control-stack,
+      .side-stack {
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+
       .control-panel {
         padding: 14px;
       }
@@ -928,7 +972,7 @@
       }
 
       .input-preview-layout {
-        grid-template-columns: minmax(0, 1fr) 160px;
+        grid-template-columns: minmax(0, 1fr) 150px;
         gap: 12px;
         align-items: stretch;
       }
@@ -967,6 +1011,7 @@
         line-height: 1;
         padding: 0;
         cursor: pointer;
+        touch-action: manipulation;
       }
 
       .step-button:active {
@@ -1030,6 +1075,7 @@
         font-size: 28px;
         font-weight: 700;
         cursor: pointer;
+        touch-action: manipulation;
       }
 
       .slider-step-button:active {
@@ -1054,19 +1100,23 @@
       }
 
       .bottom-actions {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        align-items: start;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
         gap: 10px;
       }
 
       .number-panel {
         flex: none;
         max-width: none;
+        width: 100%;
       }
 
       .number-row {
+        display: grid;
+        grid-template-columns: auto 1fr;
         gap: 14px;
+        align-items: center;
       }
 
       .number-label {
@@ -1075,25 +1125,43 @@
       }
 
       .value-number-control {
-        width: 176px;
+        width: 100%;
       }
 
       .save-area {
-        justify-content: flex-end;
-        align-items: center;
-        gap: 12px;
-        width: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        width: 100%;
       }
 
       .save-options {
         left: 0;
         margin-right: 0;
-        font-size: 14px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        font-size: 15px;
+      }
+
+      .save-options label {
+        justify-content: center;
+        padding: 12px 10px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: rgba(255, 250, 242, 0.9);
+      }
+
+      .save-options input {
+        width: 22px;
+        height: 22px;
       }
 
       #saveButton {
-        padding: 14px 18px;
-        font-size: 16px;
+        width: 100%;
+        padding: 15px 18px;
+        font-size: 17px;
       }
 
       .hover-panel,
@@ -1132,7 +1200,7 @@
       }
 
       .hero {
-        margin: 0 3px 7px;
+        margin: 0 9px 17px;
       }
 
       h1 {
@@ -1153,8 +1221,14 @@
         font-size: 14px;
       }
 
+      .control-stack,
+      .side-stack {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
       .input-preview-layout {
-        grid-template-columns: minmax(0, 1fr) 138px;
+        grid-template-columns: minmax(0, 1fr) 126px;
         gap: 10px;
       }
 
@@ -1162,20 +1236,8 @@
         grid-template-columns: minmax(0, 1fr) 84px;
       }
 
-      .save-area {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-      }
-
       .save-options {
-        flex-direction: row;
-        justify-content: space-between;
-        gap: 10px;
-      }
-
-      #saveButton {
-        width: 100%;
+        grid-template-columns: 1fr 1fr;
       }
 
       .palette-grid {
@@ -1250,6 +1312,8 @@
           </div>
 
           <canvas id="canvas" width="540" height="540"></canvas>
+
+          <div id="touchPoint" class="touch-point"></div>
 
           <div id="touchBubble" class="touch-bubble">
             <div class="touch-bubble-head">
@@ -1437,6 +1501,7 @@
 
     const displayButtons = document.querySelectorAll(".display-button");
 
+    const touchPoint = document.getElementById("touchPoint");
     const touchBubble = document.getElementById("touchBubble");
     const touchBubbleTitle = document.getElementById("touchBubbleTitle");
     const touchBubbleBadge = document.getElementById("touchBubbleBadge");
@@ -1493,9 +1558,24 @@
     let activeTouchId = null;
     let repeatTimer = null;
     let repeatInterval = null;
+    let lastTouchEndTime = 0;
 
     function isPhoneLayout() {
       return window.matchMedia("(max-width: 768px)").matches;
+    }
+
+    function setCanvasSizeForLayout() {
+      if (isPhoneLayout()) {
+        if (canvas.width !== 540 || canvas.height !== 620) {
+          canvas.width = 540;
+          canvas.height = 620;
+        }
+      } else {
+        if (canvas.width !== 540 || canvas.height !== 540) {
+          canvas.width = 540;
+          canvas.height = 540;
+        }
+      }
     }
 
     function getValue(r, g, b) {
@@ -1684,6 +1764,8 @@
     }
 
     function draw(targetValue) {
+      setCanvasSizeForLayout();
+
       if (displayMode === "strip") {
         drawStrip(targetValue);
       } else {
@@ -1695,8 +1777,8 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-      const radius = isPhoneLayout() ? 268 : 220;
+      const centerY = isPhoneLayout() ? 352 : canvas.height / 2;
+      const radius = isPhoneLayout() ? 260 : 220;
       const grayBase = [targetValue, targetValue, targetValue];
       const anchors = createAnchors(targetValue);
 
@@ -1741,9 +1823,9 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const left = isPhoneLayout() ? 4 : 34;
-      const top = isPhoneLayout() ? 40 : 58;
+      const top = isPhoneLayout() ? 92 : 58;
       const width = isPhoneLayout() ? 532 : 472;
-      const height = isPhoneLayout() ? 494 : 424;
+      const height = isPhoneLayout() ? 520 : 424;
       const grayBase = [targetValue, targetValue, targetValue];
       const anchors = createAnchors(targetValue);
 
@@ -1850,19 +1932,46 @@
       return getCanvasColorFromPoint(event.clientX, event.clientY);
     }
 
-    function showTouchBubble(clientX, clientY, color, isFixed) {
-      const wrapRect = wheelWrap.getBoundingClientRect();
-      let x = clientX - wrapRect.left - 125;
-      let y = clientY - wrapRect.top - 132;
+    function showTouchPoint(clientX, clientY) {
+      touchPoint.style.left = clientX + "px";
+      touchPoint.style.top = clientY + "px";
+      touchPoint.classList.add("visible");
+    }
 
+    function hideTouchPoint() {
+      touchPoint.classList.remove("visible");
+    }
+
+    function showTouchBubble(clientX, clientY, color, isFixed) {
       const bubbleWidth = 250;
       const bubbleHeight = 150;
+      const margin = 8;
+      const tailGap = 34;
 
-      x = Math.max(8, Math.min(x, wrapRect.width - bubbleWidth - 8));
-      y = Math.max(8, Math.min(y, wrapRect.height - bubbleHeight - 22));
+      let left = clientX - bubbleWidth / 2;
+      let top = clientY - bubbleHeight - tailGap;
 
-      touchBubble.style.left = x + "px";
-      touchBubble.style.top = y + "px";
+      if (left < margin) {
+        left = margin;
+      }
+
+      if (left + bubbleWidth > window.innerWidth - margin) {
+        left = window.innerWidth - bubbleWidth - margin;
+      }
+
+      if (top < margin) {
+        top = margin;
+      }
+
+      if (top + bubbleHeight > window.innerHeight - margin) {
+        top = window.innerHeight - bubbleHeight - margin;
+      }
+
+      const tailLeft = Math.max(24, Math.min(clientX - left, bubbleWidth - 24));
+
+      touchBubble.style.left = left + "px";
+      touchBubble.style.top = top + "px";
+      touchBubble.style.setProperty("--tail-left", tailLeft + "px");
 
       const r = color[0];
       const g = color[1];
@@ -1880,6 +1989,7 @@
 
     function hideTouchBubble() {
       touchBubble.classList.remove("visible");
+      hideTouchPoint();
     }
 
     function handleTouchAt(clientX, clientY, isFixed) {
@@ -1894,6 +2004,7 @@
       touchDragColor = color;
 
       updateSample(hoverSampleBox, hoverSampleMain, hoverSampleSub, color);
+      showTouchPoint(clientX, clientY);
       showTouchBubble(clientX, clientY, color, isFixed);
     }
 
@@ -2148,6 +2259,28 @@
       repeatInterval = null;
     }
 
+    document.addEventListener("gesturestart", function (event) {
+      event.preventDefault();
+    });
+
+    document.addEventListener("gesturechange", function (event) {
+      event.preventDefault();
+    });
+
+    document.addEventListener("gestureend", function (event) {
+      event.preventDefault();
+    });
+
+    document.addEventListener("touchend", function (event) {
+      const now = Date.now();
+
+      if (now - lastTouchEndTime <= 320) {
+        event.preventDefault();
+      }
+
+      lastTouchEndTime = now;
+    }, { passive: false });
+
     document.querySelectorAll(".tab-button").forEach(function (button) {
       button.addEventListener("click", function () {
         switchTab(button.dataset.tab);
@@ -2229,6 +2362,7 @@
       if (touchDragColor !== null) {
         pickedColor = [touchDragColor[0], touchDragColor[1], touchDragColor[2]];
         updateSample(pickedSampleBox, pickedSampleMain, pickedSampleSub, pickedColor);
+        showTouchPoint(lastTouchX, lastTouchY);
         showTouchBubble(lastTouchX, lastTouchY, pickedColor, true);
       }
 
