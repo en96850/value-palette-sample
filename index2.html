@@ -46,6 +46,49 @@
 
     .hero {
       margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+    }
+
+    .hero-text {
+      min-width: 0;
+    }
+
+    .language-control {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      flex: 0 0 auto;
+      padding-top: 2px;
+    }
+
+    .language-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+
+    .language-select {
+      min-width: 150px;
+      padding: 9px 34px 9px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 242, 0.96);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 8px 20px rgba(90, 60, 30, 0.10);
+      cursor: pointer;
+    }
+
+    .language-select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(201, 122, 43, 0.16);
     }
 
     .eyebrow {
@@ -886,6 +929,24 @@
 
       .hero {
         margin: 0 10px 18px;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .language-control {
+        padding-top: 0;
+        gap: 5px;
+      }
+
+      .language-label {
+        font-size: 10px;
+      }
+
+      .language-select {
+        min-width: 124px;
+        max-width: 42vw;
+        padding: 8px 28px 8px 10px;
+        font-size: 12px;
       }
 
       .eyebrow {
@@ -1232,6 +1293,11 @@
         margin: 0 9px 17px;
       }
 
+      .language-select {
+        min-width: 112px;
+        font-size: 11px;
+      }
+
       h1 {
         font-size: 27px;
       }
@@ -1278,51 +1344,64 @@
 <body>
   <div class="page">
     <div class="hero">
-      <div class="eyebrow">VALUE PALETTE</div>
-      <h1>バリューパレット</h1>
-      <p class="sub">同じ濃さの色相環を作るツール。</p>
+      <div class="hero-text">
+        <div class="eyebrow">VALUE PALETTE</div>
+        <h1 data-i18n="appTitle">バリューパレット</h1>
+        <p class="sub" data-i18n="appSubtitle">同じ濃さの色相環を作るツール。</p>
+      </div>
+
+      <div class="language-control">
+        <label for="languageSelect" class="language-label" data-i18n="languageLabel">表示言語</label>
+        <select id="languageSelect" class="language-select" aria-label="Language">
+          <option value="ja">日本語</option>
+          <option value="en">English</option>
+          <option value="ko">한국어</option>
+          <option value="zh-CN">简体中文</option>
+          <option value="zh-TW">繁體中文</option>
+        </select>
+      </div>
     </div>
 
     <div class="workspace">
       <div class="side-stack">
         <div class="panel sample-panel hover-panel">
           <div class="sample-head">
-            <div class="sample-title">カーソル位置の色</div>
+            <div class="sample-title" data-i18n="hoverTitle">カーソル位置の色</div>
             <div class="sample-badge">LIVE</div>
           </div>
           <div id="hoverSampleBox" class="sample-box"></div>
           <div class="sample-info">
-            <span id="hoverSampleMain" class="sample-main">色相環にカーソルを合わせてください</span>
+            <span id="hoverSampleMain" class="sample-main" data-i18n="hoverPrompt">色相環にカーソルを合わせてください</span>
             <span id="hoverSampleSub">VALUE: -</span>
           </div>
         </div>
 
         <div class="panel sample-panel picked-panel">
           <div class="sample-head">
-            <div class="sample-title">クリックで固定した色</div>
+            <div class="sample-title" data-i18n="pickedTitle">クリックで固定した色</div>
             <div class="sample-badge">PICK</div>
           </div>
           <div id="pickedSampleBox" class="sample-box"></div>
           <div class="sample-info">
-            <span id="pickedSampleMain" class="sample-main">まだ固定されていません</span>
+            <span id="pickedSampleMain" class="sample-main" data-i18n="pickedEmpty">まだ固定されていません</span>
             <span id="pickedSampleSub">VALUE: -</span>
           </div>
           <div class="add-palette-row">
-            <button id="addPaletteButton" class="small-button">パレットに追加</button>
+            <button id="addPaletteButton" class="small-button" data-i18n="addPalette">パレットに追加</button>
           </div>
         </div>
 
         <div class="panel palette-panel">
           <div class="palette-head">
-            <div class="palette-title">保存パレット</div>
+            <div class="palette-title" data-i18n="savedPalette">保存パレット</div>
             <div class="palette-actions">
               <div id="paletteCount" class="palette-count">0色</div>
-              <button id="resetPaletteButton" class="reset-button">リセット</button>
+              <button id="resetPaletteButton" class="reset-button" data-i18n="reset">リセット</button>
             </div>
           </div>
-          <p class="palette-desc">固定した色を追加すると、ここに保存されます。</p>
+          <p class="palette-desc" data-i18n="paletteDesc">固定した色を追加すると、ここに保存されます。</p>
           <div id="paletteGrid" class="palette-grid">
-            <div class="palette-empty">まだ色がありません。</div>
+            <div class="palette-empty" data-i18n="paletteEmpty">まだ色がありません。</div>
           </div>
         </div>
       </div>
@@ -1331,11 +1410,11 @@
         <div class="wheel-wrap panel" id="wheelWrap">
           <div class="display-switch">
             <button class="display-button active" data-mode="wheel">
-              <span class="jp">色相環</span>
+              <span class="jp" data-i18n="wheelLabel">色相環</span>
               <span class="en">WHEEL</span>
             </button>
             <button class="display-button" data-mode="strip">
-              <span class="jp">色相帯</span>
+              <span class="jp" data-i18n="stripLabel">色相帯</span>
               <span class="en">STRIP</span>
             </button>
           </div>
@@ -1346,7 +1425,7 @@
 
           <div id="touchBubble" class="touch-bubble">
             <div class="touch-bubble-head">
-              <span id="touchBubbleTitle" class="touch-bubble-title">タップしている色</span>
+              <span id="touchBubbleTitle" class="touch-bubble-title" data-i18n="touchLiveTitle">タップしている色</span>
               <span id="touchBubbleBadge" class="touch-bubble-badge">LIVE</span>
             </div>
             <div id="touchBubbleColor" class="touch-bubble-color"></div>
@@ -1354,7 +1433,7 @@
               <span id="touchBubbleMain" class="touch-bubble-main">RGB(-, -, -)</span>
               <span id="touchBubbleSub" class="touch-bubble-sub">HEX #------ / VALUE -</span>
             </div>
-            <button id="touchAddButton" class="touch-add-button">パレットに追加</button>
+            <button id="touchAddButton" class="touch-add-button" data-i18n="addPalette">パレットに追加</button>
           </div>
         </div>
 
@@ -1369,8 +1448,8 @@
 
       <div class="control-stack">
         <div class="panel control-panel">
-          <p class="panel-title">色からバリューを取得</p>
-          <p class="panel-note">入力した色を白黒化した時の濃さで、同バリューのパレットを作ります。</p>
+          <p class="panel-title" data-i18n="inputTitle">色からバリューを取得</p>
+          <p class="panel-note" data-i18n="inputNote">入力した色を白黒化した時の濃さで、同バリューのパレットを作ります。</p>
 
           <div class="tab-buttons">
             <button class="tab-button active" data-tab="rgbPanel">RGB</button>
@@ -1419,7 +1498,7 @@
             </div>
 
             <div class="button-row">
-              <button id="makeFromRgbButton" class="main-button">RGBのバリューで作成</button>
+              <button id="makeFromRgbButton" class="main-button" data-i18n="makeRgb">RGBのバリューで作成</button>
             </div>
           </div>
 
@@ -1464,7 +1543,7 @@
             </div>
 
             <div class="button-row">
-              <button id="makeFromHsvButton" class="main-button">HSVのバリューで作成</button>
+              <button id="makeFromHsvButton" class="main-button" data-i18n="makeHsv">HSVのバリューで作成</button>
             </div>
           </div>
 
@@ -1481,14 +1560,14 @@
             </div>
 
             <div class="button-row">
-              <button id="makeFromHexButton" class="main-button">HEXのバリューで作成</button>
+              <button id="makeFromHexButton" class="main-button" data-i18n="makeHex">HEXのバリューで作成</button>
             </div>
           </div>
         </div>
 
         <div class="panel slider-panel">
           <div class="slider-track-row">
-            <span class="slider-label">シークバーで調整</span>
+            <span class="slider-label" data-i18n="sliderLabel">シークバーで調整</span>
             <div class="slider-control-row">
               <button class="slider-step-button" data-target="valueNumber" data-step="-1">−</button>
               <input id="valueSlider" type="range" min="0" max="255" value="111">
@@ -1500,7 +1579,7 @@
         <div class="bottom-actions">
           <div class="panel number-panel">
             <div class="number-row">
-              <span class="number-label">バリューを<br>数値で指定</span>
+              <span class="number-label"><span data-i18n="valueNumberTop">バリューを</span><br><span data-i18n="valueNumberBottom">数値で指定</span></span>
               <div class="number-control value-number-control">
                 <input id="valueNumber" type="number" min="0" max="255" value="111">
                 <div class="mobile-stepper">
@@ -1513,10 +1592,10 @@
 
           <div class="save-area">
             <div class="save-options">
-              <label><input id="saveDisplayCheck" type="checkbox" checked>表示を保存</label>
-              <label><input id="savePaletteCheck" type="checkbox">パレットを保存</label>
+              <label><input id="saveDisplayCheck" type="checkbox" checked><span data-i18n="saveDisplay">表示を保存</span></label>
+              <label><input id="savePaletteCheck" type="checkbox"><span data-i18n="savePalette">パレットを保存</span></label>
             </div>
-            <button id="saveButton">PNG保存</button>
+            <button id="saveButton" data-i18n="savePng">PNG保存</button>
           </div>
         </div>
       </div>
@@ -1527,6 +1606,7 @@
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
     const wheelWrap = document.getElementById("wheelWrap");
+    const languageSelect = document.getElementById("languageSelect");
 
     const displayButtons = document.querySelectorAll(".display-button");
 
@@ -1588,9 +1668,267 @@
     let repeatTimer = null;
     let repeatInterval = null;
     let lastTouchEndTime = 0;
+    let currentValue255 = 111;
+    let currentLanguage = "ja";
+    let hoverColor = null;
+
+    const translations = {
+      ja: {
+        appTitle: "バリューパレット",
+        appSubtitle: "同じ濃さの色相環を作るツール。",
+        languageLabel: "表示言語",
+        hoverTitle: "カーソル位置の色",
+        hoverPrompt: "色相環にカーソルを合わせてください",
+        pickedTitle: "クリックで固定した色",
+        pickedEmpty: "まだ固定されていません",
+        addPalette: "パレットに追加",
+        savedPalette: "保存パレット",
+        reset: "リセット",
+        paletteDesc: "固定した色を追加すると、ここに保存されます。",
+        paletteEmpty: "まだ色がありません。",
+        wheelLabel: "色相環",
+        stripLabel: "色相帯",
+        touchLiveTitle: "タップしている色",
+        touchPickedTitle: "タップした色",
+        inputTitle: "色からバリューを取得",
+        inputNote: "入力した色を白黒化した時の濃さで、同バリューのパレットを作ります。",
+        makeRgb: "RGBのバリューで作成",
+        makeHsv: "HSVのバリューで作成",
+        makeHex: "HEXのバリューで作成",
+        sliderLabel: "シークバーで調整",
+        valueNumberTop: "バリューを",
+        valueNumberBottom: "数値で指定",
+        saveDisplay: "表示を保存",
+        savePalette: "パレットを保存",
+        savePng: "PNG保存",
+        paletteExportEmpty: "パレットに色がありません",
+        pngImageDescription: "PNG画像",
+        colorCount: function (count) {
+          return count + "色";
+        }
+      },
+      en: {
+        appTitle: "Value Palette",
+        appSubtitle: "A tool for creating hue palettes with the same value.",
+        languageLabel: "Language",
+        hoverTitle: "Cursor color",
+        hoverPrompt: "Move the cursor over the hue wheel",
+        pickedTitle: "Selected color",
+        pickedEmpty: "No color selected yet",
+        addPalette: "Add to palette",
+        savedPalette: "Saved palette",
+        reset: "Reset",
+        paletteDesc: "Selected colors will be saved here.",
+        paletteEmpty: "No colors yet.",
+        wheelLabel: "Hue wheel",
+        stripLabel: "Hue strip",
+        touchLiveTitle: "Color being touched",
+        touchPickedTitle: "Selected color",
+        inputTitle: "Get value from color",
+        inputNote: "Creates a palette with the same value as the grayscale value of the entered color.",
+        makeRgb: "Create from RGB value",
+        makeHsv: "Create from HSV value",
+        makeHex: "Create from HEX value",
+        sliderLabel: "Adjust with slider",
+        valueNumberTop: "Set value",
+        valueNumberBottom: "by number",
+        saveDisplay: "Save display",
+        savePalette: "Save palette",
+        savePng: "Save PNG",
+        paletteExportEmpty: "No colors in the palette",
+        pngImageDescription: "PNG image",
+        colorCount: function (count) {
+          return count === 1 ? "1 color" : count + " colors";
+        }
+      },
+      ko: {
+        appTitle: "밸류 팔레트",
+        appSubtitle: "같은 명도의 색상환을 만드는 도구입니다.",
+        languageLabel: "표시 언어",
+        hoverTitle: "커서 위치의 색",
+        hoverPrompt: "색상환 위에 커서를 올려 주세요",
+        pickedTitle: "클릭으로 선택한 색",
+        pickedEmpty: "아직 선택된 색이 없습니다",
+        addPalette: "팔레트에 추가",
+        savedPalette: "저장된 팔레트",
+        reset: "초기화",
+        paletteDesc: "선택한 색을 추가하면 여기에 저장됩니다.",
+        paletteEmpty: "아직 색이 없습니다.",
+        wheelLabel: "색상환",
+        stripLabel: "색상 띠",
+        touchLiveTitle: "터치 중인 색",
+        touchPickedTitle: "선택한 색",
+        inputTitle: "색에서 밸류 가져오기",
+        inputNote: "입력한 색을 흑백으로 변환했을 때의 명도로 같은 밸류의 팔레트를 만듭니다.",
+        makeRgb: "RGB 밸류로 만들기",
+        makeHsv: "HSV 밸류로 만들기",
+        makeHex: "HEX 밸류로 만들기",
+        sliderLabel: "슬라이더로 조정",
+        valueNumberTop: "밸류를",
+        valueNumberBottom: "숫자로 지정",
+        saveDisplay: "표시 저장",
+        savePalette: "팔레트 저장",
+        savePng: "PNG 저장",
+        paletteExportEmpty: "팔레트에 색이 없습니다",
+        pngImageDescription: "PNG 이미지",
+        colorCount: function (count) {
+          return count + "색";
+        }
+      },
+      "zh-CN": {
+        appTitle: "明度调色板",
+        appSubtitle: "用于制作相同明度色相环的工具。",
+        languageLabel: "显示语言",
+        hoverTitle: "光标位置的颜色",
+        hoverPrompt: "请将光标移到色相环上",
+        pickedTitle: "点击选定的颜色",
+        pickedEmpty: "尚未选定颜色",
+        addPalette: "添加到调色板",
+        savedPalette: "保存的调色板",
+        reset: "重置",
+        paletteDesc: "选定的颜色会保存在这里。",
+        paletteEmpty: "还没有颜色。",
+        wheelLabel: "色相环",
+        stripLabel: "色相带",
+        touchLiveTitle: "正在触摸的颜色",
+        touchPickedTitle: "已选定的颜色",
+        inputTitle: "从颜色获取明度",
+        inputNote: "根据输入颜色转为灰度后的明度，制作相同明度的调色板。",
+        makeRgb: "用 RGB 明度创建",
+        makeHsv: "用 HSV 明度创建",
+        makeHex: "用 HEX 明度创建",
+        sliderLabel: "用滑块调整",
+        valueNumberTop: "用数值",
+        valueNumberBottom: "指定明度",
+        saveDisplay: "保存显示",
+        savePalette: "保存调色板",
+        savePng: "保存 PNG",
+        paletteExportEmpty: "调色板中没有颜色",
+        pngImageDescription: "PNG 图像",
+        colorCount: function (count) {
+          return count + "色";
+        }
+      },
+      "zh-TW": {
+        appTitle: "明度調色盤",
+        appSubtitle: "用於製作相同明度色相環的工具。",
+        languageLabel: "顯示語言",
+        hoverTitle: "游標位置的顏色",
+        hoverPrompt: "請將游標移到色相環上",
+        pickedTitle: "點擊選定的顏色",
+        pickedEmpty: "尚未選定顏色",
+        addPalette: "加入調色盤",
+        savedPalette: "已儲存調色盤",
+        reset: "重設",
+        paletteDesc: "選定的顏色會儲存在這裡。",
+        paletteEmpty: "還沒有顏色。",
+        wheelLabel: "色相環",
+        stripLabel: "色相帶",
+        touchLiveTitle: "正在觸碰的顏色",
+        touchPickedTitle: "已選定的顏色",
+        inputTitle: "從顏色取得明度",
+        inputNote: "根據輸入顏色轉為灰階後的明度，製作相同明度的調色盤。",
+        makeRgb: "用 RGB 明度建立",
+        makeHsv: "用 HSV 明度建立",
+        makeHex: "用 HEX 明度建立",
+        sliderLabel: "用滑桿調整",
+        valueNumberTop: "用數值",
+        valueNumberBottom: "指定明度",
+        saveDisplay: "儲存顯示",
+        savePalette: "儲存調色盤",
+        savePng: "儲存 PNG",
+        paletteExportEmpty: "調色盤中沒有顏色",
+        pngImageDescription: "PNG 圖像",
+        colorCount: function (count) {
+          return count + "色";
+        }
+      }
+    };
+
+    function t(key) {
+      return translations[currentLanguage][key] || translations.ja[key] || key;
+    }
+
+    function colorCountText(count) {
+      const formatter = translations[currentLanguage].colorCount || translations.ja.colorCount;
+      return formatter(count);
+    }
+
+    function applyLanguage(language) {
+      if (!translations[language]) {
+        language = "ja";
+      }
+
+      currentLanguage = language;
+      languageSelect.value = currentLanguage;
+      document.documentElement.lang = currentLanguage;
+      document.title = t("appTitle");
+      localStorage.setItem("valuePaletteLanguage", currentLanguage);
+
+      document.querySelectorAll("[data-i18n]").forEach(function (element) {
+        const key = element.dataset.i18n;
+        element.textContent = t(key);
+      });
+
+      if (hoverColor !== null) {
+        updateSample(hoverSampleBox, hoverSampleMain, hoverSampleSub, hoverColor);
+      } else {
+        resetHoverSample();
+      }
+
+      if (pickedColor !== null) {
+        updateSample(pickedSampleBox, pickedSampleMain, pickedSampleSub, pickedColor);
+      } else {
+        pickedSampleMain.textContent = t("pickedEmpty");
+        pickedSampleSub.textContent = "VALUE: -";
+      }
+
+      renderPalette();
+
+      if (touchDragColor !== null && touchBubble.classList.contains("visible")) {
+        showTouchBubble(lastTouchX, lastTouchY, touchDragColor, pickedColor !== null);
+      }
+    }
 
     function isPhoneLayout() {
       return window.matchMedia("(max-width: 768px)").matches;
+    }
+
+    function isHsvValueMode() {
+      const activeButton = document.querySelector(".tab-button.active");
+      return activeButton && activeButton.dataset.tab === "hsvPanel";
+    }
+
+    function getDisplayValueMax() {
+      return isHsvValueMode() ? 100 : 255;
+    }
+
+    function value255ToDisplayValue(value255) {
+      value255 = clampByte(value255);
+
+      if (isHsvValueMode()) {
+        return Math.round(value255 / 255 * 100);
+      }
+
+      return value255;
+    }
+
+    function displayValueToValue255(displayValue) {
+      if (isHsvValueMode()) {
+        const value100 = clamp(displayValue, 0, 100);
+        return Math.round(value100 / 100 * 255);
+      }
+
+      return clampByte(displayValue);
+    }
+
+    function syncValueDisplay() {
+      const displayMax = getDisplayValueMax();
+      const displayValue = value255ToDisplayValue(currentValue255);
+
+      valueNumber.max = displayMax;
+      valueNumber.value = displayValue;
+      readoutNum.textContent = displayValue;
     }
 
     function setCanvasSizeForLayout() {
@@ -1921,28 +2259,54 @@
       return `RGB(${r}, ${g}, ${b})`;
     }
 
+    function formatDisplayValueText(value255) {
+      return String(value255ToDisplayValue(value255));
+    }
+
     function updateSample(box, main, sub, color) {
       const r = color[0];
       const g = color[1];
       const b = color[2];
       const value = getValue(r, g, b);
 
+      if (box === hoverSampleBox) {
+        hoverColor = [r, g, b];
+      }
+
       box.style.background = `rgb(${r}, ${g}, ${b})`;
       main.textContent = formatColorForActiveTab(color);
-      sub.textContent = `VALUE: ${value}`;
+      sub.textContent = `VALUE: ${formatDisplayValueText(value)}`;
     }
 
     function resetHoverSample() {
+      hoverColor = null;
       hoverSampleBox.style.background =
         "linear-gradient(135deg, rgba(255,255,255,0.45), rgba(240,225,205,0.55))";
-      hoverSampleMain.textContent = "色相環にカーソルを合わせてください";
+      hoverSampleMain.textContent = t("hoverPrompt");
       hoverSampleSub.textContent = "VALUE: -";
     }
 
-    function getCanvasColorFromPoint(clientX, clientY) {
+    function getCanvasPointFromClient(clientX, clientY) {
       const rect = canvas.getBoundingClientRect();
-      const x = Math.floor((clientX - rect.left) * canvas.width / rect.width);
-      const y = Math.floor((clientY - rect.top) * canvas.height / rect.height);
+
+      return {
+        x: (clientX - rect.left) * canvas.width / rect.width,
+        y: (clientY - rect.top) * canvas.height / rect.height
+      };
+    }
+
+    function getClientPointFromCanvasPoint(canvasX, canvasY) {
+      const rect = canvas.getBoundingClientRect();
+
+      return {
+        x: rect.left + canvasX * rect.width / canvas.width,
+        y: rect.top + canvasY * rect.height / canvas.height
+      };
+    }
+
+    function getPixelColorFromCanvasPoint(canvasX, canvasY) {
+      const x = Math.floor(canvasX);
+      const y = Math.floor(canvasY);
 
       if (x < 0 || x >= canvas.width || y < 0 || y >= canvas.height) {
         return null;
@@ -1957,8 +2321,75 @@
       return [pixel[0], pixel[1], pixel[2]];
     }
 
+    function getCanvasColorFromPoint(clientX, clientY) {
+      const point = getCanvasPointFromClient(clientX, clientY);
+      return getPixelColorFromCanvasPoint(point.x, point.y);
+    }
+
     function getCanvasColorFromEvent(event) {
       return getCanvasColorFromPoint(event.clientX, event.clientY);
+    }
+
+    function getSmartTouchSelection(clientX, clientY, shouldClamp) {
+      const point = getCanvasPointFromClient(clientX, clientY);
+      let canvasX = point.x;
+      let canvasY = point.y;
+
+      if (displayMode === "wheel") {
+        const centerX = canvas.width / 2;
+        const centerY = isPhoneLayout() ? 420 : canvas.height / 2;
+        const radius = isPhoneLayout() ? 260 : 220;
+
+        const dx = canvasX - centerX;
+        const dy = canvasY - centerY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance > radius) {
+          if (!shouldClamp) {
+            return null;
+          }
+
+          const angle = Math.atan2(dy, dx);
+          canvasX = centerX + Math.cos(angle) * radius;
+          canvasY = centerY + Math.sin(angle) * radius;
+        }
+      } else {
+        const left = isPhoneLayout() ? 4 : 34;
+        const top = isPhoneLayout() ? 148 : 58;
+        const width = isPhoneLayout() ? 532 : 472;
+        const height = isPhoneLayout() ? 520 : 424;
+        const right = left + width - 1;
+        const bottom = top + height - 1;
+
+        const inside =
+          canvasX >= left &&
+          canvasX <= right &&
+          canvasY >= top &&
+          canvasY <= bottom;
+
+        if (!inside) {
+          if (!shouldClamp) {
+            return null;
+          }
+
+          canvasX = Math.max(left, Math.min(canvasX, right));
+          canvasY = Math.max(top, Math.min(canvasY, bottom));
+        }
+      }
+
+      const color = getPixelColorFromCanvasPoint(canvasX, canvasY);
+
+      if (color === null) {
+        return null;
+      }
+
+      const clientPoint = getClientPointFromCanvasPoint(canvasX, canvasY);
+
+      return {
+        color: color,
+        clientX: clientPoint.x,
+        clientY: clientPoint.y
+      };
     }
 
     function showTouchPoint(clientX, clientY) {
@@ -2043,11 +2474,11 @@
       const b = color[2];
       const value = getValue(r, g, b);
 
-      touchBubbleTitle.textContent = isFixed ? "タップした色" : "タップしている色";
+      touchBubbleTitle.textContent = isFixed ? t("touchPickedTitle") : t("touchLiveTitle");
       touchBubbleBadge.textContent = isFixed ? "PICK" : "LIVE";
       touchBubbleColor.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
       touchBubbleMain.textContent = `RGB(${r}, ${g}, ${b})`;
-      touchBubbleSub.textContent = `${rgbToHex(r, g, b)} / VALUE ${value}`;
+      touchBubbleSub.textContent = `${rgbToHex(r, g, b)} / VALUE ${formatDisplayValueText(value)}`;
 
       touchBubble.classList.add("visible");
     }
@@ -2057,30 +2488,32 @@
       hideTouchPoint();
     }
 
-    function handleTouchAt(clientX, clientY, isFixed) {
-      const color = getCanvasColorFromPoint(clientX, clientY);
+    function handleTouchAt(clientX, clientY, isFixed, shouldClamp) {
+      const selection = getSmartTouchSelection(clientX, clientY, shouldClamp);
 
-      if (color === null) {
-        return;
+      if (selection === null) {
+        return false;
       }
 
-      lastTouchX = clientX;
-      lastTouchY = clientY;
-      touchDragColor = color;
+      lastTouchX = selection.clientX;
+      lastTouchY = selection.clientY;
+      touchDragColor = selection.color;
 
-      updateSample(hoverSampleBox, hoverSampleMain, hoverSampleSub, color);
-      showTouchPoint(clientX, clientY);
-      showTouchBubble(clientX, clientY, color, isFixed);
+      updateSample(hoverSampleBox, hoverSampleMain, hoverSampleSub, selection.color);
+      showTouchPoint(selection.clientX, selection.clientY);
+      showTouchBubble(selection.clientX, selection.clientY, selection.color, isFixed);
+
+      return true;
     }
 
     function renderPalette() {
       paletteGrid.innerHTML = "";
-      paletteCount.textContent = `${savedPalette.length}色`;
+      paletteCount.textContent = colorCountText(savedPalette.length);
 
       if (savedPalette.length === 0) {
         const empty = document.createElement("div");
         empty.className = "palette-empty";
-        empty.textContent = "まだ色がありません。";
+        empty.textContent = t("paletteEmpty");
         paletteGrid.appendChild(empty);
         return;
       }
@@ -2089,7 +2522,7 @@
         const swatch = document.createElement("div");
         swatch.className = "palette-swatch";
         swatch.style.backgroundColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
-        swatch.title = `${rgbToHex(color[0], color[1], color[2])} / VALUE ${getValue(color[0], color[1], color[2])}`;
+        swatch.title = `${rgbToHex(color[0], color[1], color[2])} / VALUE ${formatDisplayValueText(getValue(color[0], color[1], color[2]))}`;
         paletteGrid.appendChild(swatch);
       });
     }
@@ -2118,7 +2551,7 @@
             suggestedName: filename,
             types: [
               {
-                description: "PNG画像",
+                description: t("pngImageDescription"),
                 accept: {
                   "image/png": [".png"]
                 }
@@ -2175,7 +2608,7 @@
       if (savedPalette.length === 0) {
         paletteCtx.fillStyle = "#7f6d5a";
         paletteCtx.font = "24px sans-serif";
-        paletteCtx.fillText("パレットに色がありません", padding, padding + 40);
+        paletteCtx.fillText(t("paletteExportEmpty"), padding, padding + 40);
         return paletteCanvas;
       }
 
@@ -2225,14 +2658,14 @@
     }
 
     function updateValue(value) {
-      const targetValue = clampByte(value);
+      currentValue255 = clampByte(value);
 
-      valueSlider.value = targetValue;
-      valueNumber.value = targetValue;
-      readoutNum.textContent = targetValue;
-      grayPreview.style.backgroundColor = `rgb(${targetValue}, ${targetValue}, ${targetValue})`;
+      valueSlider.value = currentValue255;
+      syncValueDisplay();
 
-      draw(targetValue);
+      grayPreview.style.backgroundColor = `rgb(${currentValue255}, ${currentValue255}, ${currentValue255})`;
+
+      draw(currentValue255);
 
       if (pickedColor !== null) {
         updateSample(pickedSampleBox, pickedSampleMain, pickedSampleSub, pickedColor);
@@ -2295,13 +2728,30 @@
         }
       });
 
+      syncValueDisplay();
+
       if (pickedColor !== null) {
         updateSample(pickedSampleBox, pickedSampleMain, pickedSampleSub, pickedColor);
+      }
+
+      renderPalette();
+
+      if (touchDragColor !== null && touchBubble.classList.contains("visible")) {
+        showTouchBubble(lastTouchX, lastTouchY, touchDragColor, pickedColor !== null);
       }
     }
 
     function changeNumberValue(targetId, step) {
       const target = document.getElementById(targetId);
+
+      if (target.id === "valueNumber") {
+        const currentDisplayValue = value255ToDisplayValue(currentValue255);
+        const nextDisplayValue = clamp(currentDisplayValue + step, 0, getDisplayValueMax());
+        updateValue(displayValueToValue255(nextDisplayValue));
+        hideTouchBubble();
+        return;
+      }
+
       const min = Number(target.min || 0);
       const max = Number(target.max || 255);
       const current = Number(target.value);
@@ -2309,10 +2759,6 @@
 
       target.value = next;
       target.dispatchEvent(new Event("input", { bubbles: true }));
-
-      if (target.id === "valueNumber") {
-        updateValue(target.value);
-      }
 
       hideTouchBubble();
     }
@@ -2346,6 +2792,10 @@
       lastTouchEndTime = now;
     }, { passive: false });
 
+    languageSelect.addEventListener("change", function () {
+      applyLanguage(languageSelect.value);
+    });
+
     document.querySelectorAll(".tab-button").forEach(function (button) {
       button.addEventListener("click", function () {
         switchTab(button.dataset.tab);
@@ -2356,7 +2806,7 @@
       button.addEventListener("click", function () {
         displayMode = button.dataset.mode;
         updateDisplayButtons();
-        updateValue(valueNumber.value);
+        updateValue(currentValue255);
         resetHoverSample();
         hideTouchBubble();
       });
@@ -2397,13 +2847,21 @@
       event.preventDefault();
 
       const touch = event.changedTouches[0];
-      activeTouchId = touch.identifier;
+      const started = handleTouchAt(touch.clientX, touch.clientY, false, false);
 
-      handleTouchAt(touch.clientX, touch.clientY, false);
+      if (!started) {
+        activeTouchId = null;
+        touchDragColor = null;
+        hideTouchBubble();
+        return;
+      }
+
+      activeTouchId = touch.identifier;
     }, { passive: false });
 
     canvas.addEventListener("touchmove", function (event) {
       if (!isPhoneLayout()) return;
+      if (activeTouchId === null) return;
 
       event.preventDefault();
 
@@ -2416,11 +2874,12 @@
         }
       }
 
-      handleTouchAt(touch.clientX, touch.clientY, false);
+      handleTouchAt(touch.clientX, touch.clientY, false, true);
     }, { passive: false });
 
     canvas.addEventListener("touchend", function (event) {
       if (!isPhoneLayout()) return;
+      if (activeTouchId === null) return;
 
       event.preventDefault();
 
@@ -2507,7 +2966,7 @@
     });
 
     valueNumber.addEventListener("input", function () {
-      updateValue(valueNumber.value);
+      updateValue(displayValueToValue255(valueNumber.value));
       hideTouchBubble();
     });
 
@@ -2554,7 +3013,7 @@
     });
 
     window.addEventListener("resize", function () {
-      updateValue(valueNumber.value);
+      updateValue(currentValue255);
       hideTouchBubble();
     });
 
@@ -2562,7 +3021,7 @@
     updateRgbPreview();
     updateHsvPreview();
     updateHexPreview();
-    renderPalette();
+    applyLanguage(localStorage.getItem("valuePaletteLanguage") || "ja");
     updateValue(111);
   </script>
 </body>
